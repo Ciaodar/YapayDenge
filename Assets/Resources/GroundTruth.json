@@ -1,0 +1,882 @@
+[
+  {
+    "scenario_id": "ENERJI_01",
+    "action_name": "Kömür santrallerinin acil olarak kapatılması",
+    "scientific_basis": "Kömürün aniden terk edilmesi karbon emisyonlarını (IPCC WG III) hızla düşürür ancak enerji arzında kriz ve işsizlik yaratır; uzun vadeli geçiş planlanmadığı için ekonomi ve toplum kısa vadede sarsılır.",
+    "economy_impact": -20,
+    "environment_impact": 25,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "ENERJI_02",
+    "action_name": "Güneş ve rüzgar enerjisine devasa devlet sübvansiyonu",
+    "scientific_basis": "Yenilenebilir enerji kapasitesinin artırılması sera gazı emisyonlarını düşürür ve yeni yeşil istihdam (UNEP Green Jobs) yaratır. Ancak başlangıç kurulum maliyetleri devlet bütçesine yüktür.",
+    "economy_impact": -5,
+    "environment_impact": 20,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "ENERJI_03",
+    "action_name": "Yeni nesil nükleer santral (SMR) inşası",
+    "scientific_basis": "Nükleer enerji düşük karbonlu baz yük sağlar (IEA raporları). Ancak yüksek inşa maliyetleri ve halkın radyasyon endişesi (NIMBY sendromu) toplumsal tepkiye yol açar.",
+    "economy_impact": 10,
+    "environment_impact": 15,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "ENERJI_04",
+    "action_name": "Akıllı şebeke (Smart Grid) altyapısına geçiş",
+    "scientific_basis": "Elektrik dağıtımındaki kayıp-kaçak oranlarını düşürür ve enerji verimliliğini artırır. Ekonomiye uzun vadede tasarruf sağlarken çevreyi korur (SDG 7, 9).",
+    "economy_impact": 15,
+    "environment_impact": 10,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "ENERJI_05",
+    "action_name": "Doğalgaz arama faaliyetlerinin hızlandırılması",
+    "scientific_basis": "Enerji bağımsızlığını artırır ve ekonomiyi canlandırır, ancak fosil yakıta kilitlenme (carbon lock-in) yaratarak uzun vadeli iklim hedeflerinden (Paris Antlaşması) sapılmasına neden olur.",
+    "economy_impact": 20,
+    "environment_impact": -20,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "ENERJI_06",
+    "action_name": "Fosil yakıt sübvansiyonlarının tamamen kaldırılması",
+    "scientific_basis": "Devlet bütçesini rahatlatır ve piyasayı yenilenebilir enerjiye yönlendirir (World Bank). Ancak benzin ve elektrik fiyatları aniden artacağı için halkın tepkisi çok sert olur.",
+    "economy_impact": 10,
+    "environment_impact": 15,
+    "society_impact": -25
+  },
+  {
+    "scenario_id": "ENERJI_07",
+    "action_name": "Binalarda zorunlu ısı yalıtımı yasası",
+    "scientific_basis": "Bina sektöründeki enerji israfını ciddi oranda azaltır. Ev sahipleri için yenileme maliyeti yaratsa da uzun vadeli fatura düşüşü halkı rahatlatır (IEA Energy Efficiency).",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "ENERJI_08",
+    "action_name": "Biyokütle (Ağaç yakma) tesislerinin genişletilmesi",
+    "scientific_basis": "Yerel enerji üretimi sağlar ancak ormansızlaşmaya ve hava kirliliğine (PM2.5) neden olur. Karbon nötr olduğu iddia edilse de kısa vadeli emisyonları artırır (EASAC raporu).",
+    "economy_impact": 10,
+    "environment_impact": -15,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ENERJI_09",
+    "action_name": "Dev hidroelektrik baraj projesi inşası",
+    "scientific_basis": "Ucuz ve temiz elektrik sağlar (ekonomik büyüme). Ancak nehir ekosistemlerini yok eder ve yerel halkın zorunlu göçüne neden olur (World Commission on Dams).",
+    "economy_impact": 25,
+    "environment_impact": -20,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "ENERJI_10",
+    "action_name": "Evsel güneş paneli kurulumlarına %100 vergi muafiyeti",
+    "scientific_basis": "Bireysel yeşil tüketim davranışını teşvik eder (Sun vd., 2023). Şebeke yükünü azaltır ve halkı ekonomik olarak destekler. Devlet vergi geliri kaybeder.",
+    "economy_impact": -10,
+    "environment_impact": 15,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "ULASIM_01",
+    "action_name": "Tüm toplu taşıma hizmetlerinin ücretsiz yapılması",
+    "scientific_basis": "Kentsel karbon ayak izini düşürür, trafik sıkışıklığını azaltır ve yoksul halka büyük destek sağlar. Ancak belediye/devlet bütçesinde kara delik yaratır.",
+    "economy_impact": -20,
+    "environment_impact": 15,
+    "society_impact": 25
+  },
+  {
+    "scenario_id": "ULASIM_02",
+    "action_name": "2035 itibarıyla içten yanmalı motorlu araç satışının yasaklanması",
+    "scientific_basis": "AB benzeri bu politika (Fit for 55), ulaşım kaynaklı emisyonları radikal şekilde bitirir. Ancak otomotiv endüstrisinde büyük iş kayıpları ve dönüşüm maliyetleri doğurur.",
+    "economy_impact": -15,
+    "environment_impact": 25,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ULASIM_03",
+    "action_name": "Şehirlerarası yüksek hızlı tren (YHT) ağının genişletilmesi",
+    "scientific_basis": "Kısa mesafeli uçuşlara çevreci bir alternatiftir (SDG 9). Şehirleri birbirine bağlayarak ticareti canlandırır. İnşaat sürecinin çevresel etkisi olsa da uzun vadede pozitiftir.",
+    "economy_impact": 20,
+    "environment_impact": 10,
+    "society_impact": 15
+  },
+  {
+    "scenario_id": "ULASIM_04",
+    "action_name": "İç hat uçuşlarına yüksek 'Havacılık Emisyon Vergisi' getirilmesi",
+    "scientific_basis": "Havacılık emisyonlarını kontrol altına alır. Havayolu şirketlerinin karlarını ve turizmi olumsuz etkiler, halk seyahat özgürlüğünün kısıtlanmasından rahatsız olur.",
+    "economy_impact": -15,
+    "environment_impact": 15,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "ULASIM_05",
+    "action_name": "Şehir merkezlerine sadece elektrikli araç (EV) girişine izin verilmesi",
+    "scientific_basis": "Şehir içi hava kalitesini anında artırır (Low Emission Zones). Ancak EV alamayan alt gelir gruplarını dışlar, ticari lojistiği zora sokar.",
+    "economy_impact": -10,
+    "environment_impact": 20,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "ULASIM_06",
+    "action_name": "Motorlu taşıt yollarının daraltılıp bisiklet yollarına çevrilmesi",
+    "scientific_basis": "Aktif ulaşımı teşvik eder, obezite ve hava kirliliğini azaltır (C40 Cities). Başlangıçta trafikte araç kullananların büyük tepkisini çeker.",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "ULASIM_07",
+    "action_name": "Yeni ve devasa bir otoyol / köprü projesi yapılması",
+    "scientific_basis": "Lojistik maliyetleri düşürür ve ekonomik aktiviteyi uyarır. Ancak 'Uyarılmış Talep' (Induced Demand) kuralı gereği uzun vadede trafiği ve emisyonları artırır, doğayı böler.",
+    "economy_impact": 20,
+    "environment_impact": -20,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "ULASIM_08",
+    "action_name": "Şehir içi teslimatlar için elektrikli kargo dronlarının yasallaşması",
+    "scientific_basis": "Son kilometre teslimat emisyonlarını sıfırlar, e-ticareti hızlandırır. Ancak gürültü kirliliği, mahremiyet ihlali algısı ve kurye işsizliği yaratır.",
+    "economy_impact": 15,
+    "environment_impact": 10,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "ULASIM_09",
+    "action_name": "Toplu taşımada AI destekli rota optimizasyonu",
+    "scientific_basis": "Boş otobüs seferlerini azaltır, yakıt tasarrufu sağlar ve yolcu bekleme süresini düşürür. Düşük maliyetli yüksek verim sağlayan dijital dönüşüm örneğidir.",
+    "economy_impact": 10,
+    "environment_impact": 5,
+    "society_impact": 15
+  },
+  {
+    "scenario_id": "ULASIM_10",
+    "action_name": "Deniz taşımacılığında 'Ağır Yakıt' kullanımının yasaklanması",
+    "scientific_basis": "Liman şehirlerinde sülfür (SOx) kirliliğini büyük oranda engeller (IMO 2020 standardı). Küresel lojistik maliyetlerini ve ithal ürün fiyatlarını artırır.",
+    "economy_impact": -10,
+    "environment_impact": 15,
+    "society_impact": 0
+  },
+  {
+    "scenario_id": "SANAYI_01",
+    "action_name": "Ağır sanayiye yüksek Karbon Vergisi getirilmesi",
+    "scientific_basis": "Karbon maliyetlendirmesi emisyonları caydırır. Şirketler maliyeti ürünlere yansıtır, enflasyon artar. Üçlü Alt Çizgi (Gedik, 2020) dengesinde ekonomiyi zorlar çevreyi korur.",
+    "economy_impact": -15,
+    "environment_impact": 20,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "SANAYI_02",
+    "action_name": "Fabrika bacalarına ve atık su çıkışlarına anlık IoT denetimi",
+    "scientific_basis": "Sanayi kirliliğini anında tespit edip ceza kesilmesini sağlar. Temiz nehirler ve hava sunar, ancak sanayicinin uyum maliyetleri nedeniyle üretim yavaşlar.",
+    "economy_impact": -10,
+    "environment_impact": 20,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "SANAYI_03",
+    "action_name": "Döngüsel Ekonomi (Circular Economy) yasasının kabulü",
+    "scientific_basis": "Firmalara ürünlerinin ömrü dolduğunda geri alma zorunluluğu getirir. Kaynak israfını durdurur, yepyeni bir geri dönüşüm sektörü doğurur, ancak üretim süreçlerini baştan tasarlatır.",
+    "economy_impact": 10,
+    "environment_impact": 25,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "SANAYI_04",
+    "action_name": "Tekstil sektöründe hızlı moda (Fast Fashion) vergisi",
+    "scientific_basis": "Çok büyük su tüketimi ve mikroplastik yaratan hızlı moda üretimini kısıtlar (UNEP). Giyim fiyatları artar, dar gelirli halkın alım gücü düşer.",
+    "economy_impact": -10,
+    "environment_impact": 15,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "SANAYI_05",
+    "action_name": "Sanayide robotik ve AI otomasyonuna %100 devlet desteği",
+    "scientific_basis": "Üretim verimliliğini ve küresel rekabet gücünü devasa artırır. Ancak mavi yakalı işçilerin kitlesel işsizliğine yol açarak toplumsal krize neden olur.",
+    "economy_impact": 25,
+    "environment_impact": 0,
+    "society_impact": -25
+  },
+  {
+    "scenario_id": "SANAYI_06",
+    "action_name": "Nadir toprak elementleri (Lityum/Kobalt) madenciliğine sınırsız izin",
+    "scientific_basis": "Yeşil enerji dönüşümü (Bataryalar) için hayati olan bu madenler ekonomiyi şahlandırır. Ancak maden sahalarındaki ekolojik yıkım ve su zehirlenmesi felakettir.",
+    "economy_impact": 25,
+    "environment_impact": -25,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "SANAYI_07",
+    "action_name": "Yeşil Organize Sanayi Bölgeleri (OSB) kurulumu",
+    "scientific_basis": "Kendi enerjisini üreten, atık sularını birbirine girdi yapan endüstriyel simbiyoz alanları. Hem ekonomik verimlilik hem çevresel koruma sağlar (SDG 9, 12).",
+    "economy_impact": 15,
+    "environment_impact": 15,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "SANAYI_08",
+    "action_name": "Tek kullanımlık plastik ambalajların tamamen yasaklanması",
+    "scientific_basis": "Okyanus kirliliğini ve mikroplastikleri büyük oranda durdurur. Gıda perakende sektörü alternatif bulmakta zorlanır, paketli gıda fiyatları artar.",
+    "economy_impact": -10,
+    "environment_impact": 25,
+    "society_impact": 0
+  },
+  {
+    "scenario_id": "SANAYI_09",
+    "action_name": "İthalata 'Sınırda Karbon Düzenleme Mekanizması' (CBAM)",
+    "scientific_basis": "Kirli ülkelerden gelen ucuz mallara vergi koyarak yerli çevreci üreticiyi korur. Uluslararası ticareti yavaşlatır ancak iklim adaleti sağlar.",
+    "economy_impact": 5,
+    "environment_impact": 15,
+    "society_impact": 0
+  },
+  {
+    "scenario_id": "SANAYI_10",
+    "action_name": "Sanayiye katı su kullanım kotası getirilmesi",
+    "scientific_basis": "Kuraklık riskine karşı yer altı sularını korur. Su yoğun çalışan kağıt ve içecek sektörlerinde üretim durmaları ve işten çıkarmalar yaşanabilir.",
+    "economy_impact": -15,
+    "environment_impact": 20,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "TARIM_01",
+    "action_name": "Kimyasal gübre ve pestisit kullanımının %50 azaltılması zorunluluğu",
+    "scientific_basis": "Toprak biyoçeşitliliğini ve insan sağlığını korur. Ancak ürün rekoltesi (verimi) düşer, gıda fiyatları fırlar ve tarımsal kriz yaşanabilir (Sri Lanka 2021 vakası).",
+    "economy_impact": -20,
+    "environment_impact": 25,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "TARIM_02",
+    "action_name": "Kırmızı et ürünlerine yüksek oranda 'Karbon Vergisi' uygulaması",
+    "scientific_basis": "Metan gazı emisyonlarının ve ormansızlaşmanın baş aktörü olan sığır yetiştiriciliğini baskılar. Ancak kültürel dirençle karşılaşır ve halkın beslenme alışkanlıklarını zorlar.",
+    "economy_impact": -5,
+    "environment_impact": 20,
+    "society_impact": -20
+  },
+  {
+    "scenario_id": "TARIM_03",
+    "action_name": "Hücre kültüründen (Laboratuvar) et üretimi Ar-Ge'sine dev bütçe",
+    "scientific_basis": "Geleneksel hayvancılığın su/arazi ayak izini %90 azaltabilecek yıkıcı bir inovasyon. Geleneksel çiftçileri iflasa sürükleyebilir ancak ekolojiyi kurtarır.",
+    "economy_impact": 5,
+    "environment_impact": 15,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "TARIM_04",
+    "action_name": "Damla sulama sistemine geçen çiftçilere %100 hibe",
+    "scientific_basis": "Vahşi sulamanın yarattığı su israfını bitirir (FAO). Tarımda verimi artırır. Başlangıçta devlet için maliyetlidir ancak gıda güvenliğini garanti altına alır.",
+    "economy_impact": 10,
+    "environment_impact": 20,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "TARIM_05",
+    "action_name": "Ormanlık alanların ve meraların tarıma açılması",
+    "scientific_basis": "Kısa vadede tarımsal üretimi artırıp gıda fiyatlarını düşürür (ekonomik rahatlama). Ancak karbon yutaklarını yok eder ve ekosistemi geri dönülmez şekilde çökertir.",
+    "economy_impact": 15,
+    "environment_impact": -30,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "TARIM_06",
+    "action_name": "GDO'lu (Genetiği Değiştirilmiş Organizma) tohumların tamamen serbest bırakılması",
+    "scientific_basis": "İklim krizine (kuraklığa) dayanıklı tohumlarla rekolte rekorları kırılır. Ancak uzun vadeli genetik kirlenme, biyoçeşitlilik kaybı ve tohumda dışa bağımlılık yaratır.",
+    "economy_impact": 20,
+    "environment_impact": -15,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "TARIM_07",
+    "action_name": "Yerel kooperatifleri destekleme yasası (Tarladan sofraya)",
+    "scientific_basis": "Gıda lojistiği (Food miles) emisyonlarını düşürür, aracıları aradan çıkararak çiftçi gelirini artırır, halk ucuz gıdaya ulaşır. Zincir market lobileri zarar eder.",
+    "economy_impact": 10,
+    "environment_impact": 10,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "TARIM_08",
+    "action_name": "Orman yangınlarına erken müdahale için dev AI-Drone filosu alımı",
+    "scientific_basis": "İklim krizinin tetiklediği mega orman yangınlarını büyümeden durdurur. Ekosistemi korur. Kurulum maliyeti yüksektir ancak felaket zararlarını önlediği için ekonomiktir.",
+    "economy_impact": -5,
+    "environment_impact": 20,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "TARIM_09",
+    "action_name": "Tarım işçilerine (Mevsimlik) sendikal haklar ve asgari ücret zorunluluğu",
+    "scientific_basis": "SDG 8 (İnsana Yakışır İş) kapsamında sosyal adaleti sağlar. Ancak tarımsal işgücü maliyetini roketler, gıda enflasyonuna neden olur.",
+    "economy_impact": -15,
+    "environment_impact": 0,
+    "society_impact": 25
+  },
+  {
+    "scenario_id": "TARIM_10",
+    "action_name": "Tarımsal atıkların (anızı) yakılmasının ağır hapisle cezalandırılması",
+    "scientific_basis": "Toprak verimini düşüren ve hava kirliliği (partikül madde) yaratan anız yakmayı durdurur. Çiftçiler alternatif mekanik işleme için makine almak zorunda kalır.",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": 0
+  },
+  {
+    "scenario_id": "SEHIR_01",
+    "action_name": "Tüm yeni binalarda 'Yeşil Çatı' (Green Roof) ve güneş paneli zorunluluğu",
+    "scientific_basis": "Kentsel Isı Adası (Urban Heat Island) etkisini azaltır, yalıtımı artırır. İnşaat maliyetlerini artıracağı için konut fiyatları yükselir.",
+    "economy_impact": -10,
+    "environment_impact": 20,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "SEHIR_02",
+    "action_name": "Düşük gelirliler için devasa 'Pasif Ev' sosyal konut projesi",
+    "scientific_basis": "Enerji faturası neredeyse sıfır olan çevreci evlerle barınma krizini çözer. Çok yüksek devlet harcaması gerektirir ancak sosyal refahı arşa çıkarır.",
+    "economy_impact": -15,
+    "environment_impact": 15,
+    "society_impact": 25
+  },
+  {
+    "scenario_id": "SEHIR_03",
+    "action_name": "Kentsel rant odaklı dikey betonlaşma izni (Gökdelenler)",
+    "scientific_basis": "İnşaat sektörü patlama yapar, kısa vadeli büyük ekonomik büyüme ve istihdam sağlar. Hava koridorlarını kapatır, altyapıyı çökertir, psikolojik baskı yaratır.",
+    "economy_impact": 25,
+    "environment_impact": -20,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "SEHIR_04",
+    "action_name": "Kıyı şeridine ve dere yataklarına lüks otel imarı verilmesi",
+    "scientific_basis": "Turizm gelirlerini maksimize eder. Ancak sel riskini devasa artırır ve deniz ekosistemini betonlaştırır (ÇED raporlarının hiçe sayılması).",
+    "economy_impact": 20,
+    "environment_impact": -25,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "SEHIR_05",
+    "action_name": "Şehir genelinde 'Yağmur Suyu Hasadı' altyapısına geçiş",
+    "scientific_basis": "Sünger Şehir (Sponge City) konsepti. Selleri engeller ve şebeke suyu kullanımını düşürür. Uzun vadeli altyapı çalışması trafiği felç edebilir.",
+    "economy_impact": -5,
+    "environment_impact": 20,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "SEHIR_06",
+    "action_name": "Büyük şehir parklarının satılarak AVM'ye dönüştürülmesi",
+    "scientific_basis": "Belediyeye devasa nakit akışı ve perakende ticareti. Kentsel yeşil alan (karbon yutağı ve nefes alma alanı) yok olur, halk protestolara başlar.",
+    "economy_impact": 20,
+    "environment_impact": -15,
+    "society_impact": -25
+  },
+  {
+    "scenario_id": "SEHIR_07",
+    "action_name": "Gece sokak aydınlatmalarının %50 oranında azaltılması",
+    "scientific_basis": "Enerji tasarrufu sağlar ve ışık kirliliğini azaltarak biyolojik ritmi/yaban hayatını korur. Ancak suç oranlarında artış ve toplumsal güvensizlik algısı yaratır.",
+    "economy_impact": 5,
+    "environment_impact": 10,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "SEHIR_08",
+    "action_name": "Deprem/Afet toplanma alanlarının sayısının 3 katına çıkarılması",
+    "scientific_basis": "Kentsel dirençliliği (Resilience - SDG 11) artırır. Çok kıymetli araziler yapılaşmaya kapatıldığı için potansiyel ticari rant kaybedilir.",
+    "economy_impact": -10,
+    "environment_impact": 5,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "SEHIR_09",
+    "action_name": "15 Dakikalık Şehir (15-Minute City) planlamasına geçiş",
+    "scientific_basis": "İnsanların okul, iş, hastane ve markete yürüyerek ulaşmasını sağlar. Karbon emisyonlarını dip seviyeye çeker, yaşam kalitesini artırır. Mevcut esnafın ve lojistiğin düzenini bozar.",
+    "economy_impact": 5,
+    "environment_impact": 20,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "SEHIR_10",
+    "action_name": "Eski binaların yıkılmayıp zorunlu güçlendirme (Retrofit) ile korunması",
+    "scientific_basis": "Yıkım/yapım kaynaklı devasa karbon emisyonunu (Embodied Carbon) önler. Müteahhitlik sektörü yavaşlar ancak kültür ve kaynaklar korunur.",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "FINANS_01",
+    "action_name": "Evrensel Temel Gelir (Universal Basic Income) bağlanması",
+    "scientific_basis": "Tüm vatandaşlara koşulsuz maaş. Yoksulluğu bitirir, tüketimi ve refahı artırır. Ancak devasa enflasyona ve çalışma motivasyonunda düşüşe yol açabilir.",
+    "economy_impact": -20,
+    "environment_impact": -5,
+    "society_impact": 30
+  },
+  {
+    "scenario_id": "FINANS_02",
+    "action_name": "Kurumlar Vergisi oranının 2 katına çıkarılması",
+    "scientific_basis": "Devlete sosyal ve çevresel projeler için devasa kaynak yaratır. Ancak şirketlerin ülkeden kaçmasına, borsanın çökmesine ve işten çıkarmalara neden olur.",
+    "economy_impact": -25,
+    "environment_impact": 5,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "FINANS_03",
+    "action_name": "Proof-of-Work (Kripto Madenciliği) faaliyetlerinin yasaklanması",
+    "scientific_basis": "Ülkenin enerji tüketimini bir gecede %5-10 düşürür, şebekeyi rahatlatır ve emisyonları keser. Yüksek teknoloji yatırımları ve kripto sermayesi ülkeyi terk eder.",
+    "economy_impact": -10,
+    "environment_impact": 15,
+    "society_impact": 0
+  },
+  {
+    "scenario_id": "FINANS_04",
+    "action_name": "Devlet destekli Yeşil Tahvil (Green Bond) ihracı",
+    "scientific_basis": "Çevre projeleri için düşük faizli finansman sağlar. Küresel yeşil fonları ülkeye çeker. Finansal olarak sürdürülebilir, çevreyi kalkındıran bir modeldir.",
+    "economy_impact": 15,
+    "environment_impact": 15,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "FINANS_05",
+    "action_name": "Süper zenginlere %5 'Servet Vergisi' getirilmesi",
+    "scientific_basis": "Gelir eşitsizliğini azaltmak (SDG 10) için kullanılır. Toplumsal adaleti artırır ancak sermaye kaçışına (Capital Flight) ve yatırım durmasına sebep olabilir.",
+    "economy_impact": -15,
+    "environment_impact": 0,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "FINANS_06",
+    "action_name": "KDV gibi dolaylı tüketim vergilerinin artırılması",
+    "scientific_basis": "Aşırı tüketimi sınırlandırarak karbon ayak izini dolaylı olarak düşürür ve devlete gelir sağlar. Ancak regresif bir vergidir, fakir halkın belini büker.",
+    "economy_impact": 15,
+    "environment_impact": 10,
+    "society_impact": -25
+  },
+  {
+    "scenario_id": "FINANS_07",
+    "action_name": "Yabancı petrol ve doğalgaz firmalarına tam vergi muafiyeti",
+    "scientific_basis": "Ülkeye sıcak para girişini ve istihdamı anında artırır. Ancak ülkenin doğal kaynakları sömürülür ve çevre standartları hiçe sayılır.",
+    "economy_impact": 25,
+    "environment_impact": -25,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "FINANS_08",
+    "action_name": "Turist başına alınan 'Eko-Turizm Ayak İzi' vergisi",
+    "scientific_basis": "Aşırı turizmin (Overtourism) doğaya verdiği zararı telafi fonu yaratır. Turist sayısını düşürür, yerel esnafın gelirini azaltır ancak ekolojiyi korur.",
+    "economy_impact": -10,
+    "environment_impact": 15,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "FINANS_09",
+    "action_name": "Asgari ücretin tek seferde %50 artırılması",
+    "scientific_basis": "Halkın alım gücünü kısa vadede uçurur. Tüketim patlaması ekolojik ayak izini artırır, küçük işletmelerin iflas etmesiyle ekonomik resesyon başlar.",
+    "economy_impact": -20,
+    "environment_impact": -10,
+    "society_impact": 25
+  },
+  {
+    "scenario_id": "FINANS_10",
+    "action_name": "Yeşil girişimlere ve çevre STK'larına 0 faizli kredi",
+    "scientific_basis": "Eko-inovasyonları hızlandırır. Döngüsel ekonomiye geçişi destekler. Devletin faiz sübvansiyonu küçük bir bütçe yüküdür ancak etkisi pozitiftir.",
+    "economy_impact": 10,
+    "environment_impact": 15,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "SOSYAL_01",
+    "action_name": "Tüm vatandaşlara tamamen ücretsiz kapsayıcı sağlık hizmeti",
+    "scientific_basis": "Halk sağlığını maksimuma çıkarır (SDG 3). Yaşam kalitesi ve mutluluk artar. Sağlık harcamaları bütçe açığını astronomik boyutlara taşır.",
+    "economy_impact": -25,
+    "environment_impact": 0,
+    "society_impact": 30
+  },
+  {
+    "scenario_id": "SOSYAL_02",
+    "action_name": "Okullarda haftada 5 saat zorunlu İklim ve Doğa eğitimi",
+    "scientific_basis": "Gelecek nesillerde çevresel farkındalığı artırarak uzun vadeli davranış değişikliği (Masacı, 2023) sağlar. Kısa vadeli pratik etkisi düşüktür.",
+    "economy_impact": -5,
+    "environment_impact": 10,
+    "society_impact": 15
+  },
+  {
+    "scenario_id": "SOSYAL_03",
+    "action_name": "Haftada 4 gün (32 saat) çalışma sistemine geçiş",
+    "scientific_basis": "Çalışan refahını ve ruh sağlığını iyileştirir. İşe gidiş-geliş azaldığı için emisyonlar düşer. İş dünyası verimlilik kaybı endişesiyle sert muhalefet eder.",
+    "economy_impact": -10,
+    "environment_impact": 10,
+    "society_impact": 25
+  },
+  {
+    "scenario_id": "SOSYAL_04",
+    "action_name": "İklim mültecilerine / göçmenlerine açık kapı politikası",
+    "scientific_basis": "Küresel insani krizlere yanıt verir (etik). Uzun vadede ucuz işgücü sağlar. Ancak demografik yapıyı değiştirir, xenofobi (yabancı düşmanlığı) ve sosyal çatışma riskini artırır.",
+    "economy_impact": 10,
+    "environment_impact": -5,
+    "society_impact": -20
+  },
+  {
+    "scenario_id": "SOSYAL_05",
+    "action_name": "İnternet erişiminin temel insan hakkı olarak ücretsiz sunulması",
+    "scientific_basis": "Eğitimde fırsat eşitliği sağlar (SDG 4). Dijitalleşmeyi hızlandırır, kağıt kullanımını düşürür. Telekom şirketlerinin karlılığını ve devlet bütçesini sarsar.",
+    "economy_impact": -10,
+    "environment_impact": 5,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "SOSYAL_06",
+    "action_name": "Emeklilik yaşının 70'e çıkarılması",
+    "scientific_basis": "Sosyal güvenlik kurumu (SGK) açığını kapatır ve devleti ekonomik krizden kurtarır. Genç işsizliği artar ve halk büyük grevler başlatır.",
+    "economy_impact": 20,
+    "environment_impact": 0,
+    "society_impact": -30
+  },
+  {
+    "scenario_id": "SOSYAL_07",
+    "action_name": "Sendikalaşma ve grev hakkının yasaklanması",
+    "scientific_basis": "Üretim kesintilerini önler ve ülkeyi ucuz işgücü cennetine çevirerek yabancı yatırımcı çeker. Ancak emek sömürüsü ve anti-demokratik ortam toplumu boğar.",
+    "economy_impact": 25,
+    "environment_impact": 0,
+    "society_impact": -30
+  },
+  {
+    "scenario_id": "SOSYAL_08",
+    "action_name": "Kültür ve sanat faaliyetlerine devlet bütçesinden %5 ayrılması",
+    "scientific_basis": "Toplumsal estetiği, empatiyi ve yaratıcılığı artırır. Ekonomik getirisinin düşük olduğu iddia edilerek popülist politikacılar tarafından eleştirilir.",
+    "economy_impact": -5,
+    "environment_impact": 0,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "SOSYAL_09",
+    "action_name": "Şekerli ve ultra işlenmiş gıdalara Sağlık Vergisi getirilmesi",
+    "scientific_basis": "Obezite, diyabet ve kalp hastalıklarını azaltarak uzun vadede sağlık sisteminin yükünü hafifletir (WHO). Gıda endüstrisinin tepkisini çeker.",
+    "economy_impact": -5,
+    "environment_impact": 5,
+    "society_impact": 15
+  },
+  {
+    "scenario_id": "SOSYAL_10",
+    "action_name": "Kadınların iş gücüne katılımını %50'ye çıkaracak kreş teşvikleri",
+    "scientific_basis": "Toplumsal cinsiyet eşitliğini (SDG 5) sağlar. Üretken nüfus arttığı için ekonomiyi güçlendirir. Devletin kreş altyapısı kurması maliyetlidir.",
+    "economy_impact": 15,
+    "environment_impact": 0,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "ATIK_01",
+    "action_name": "Hanelere zorunlu ayrıştırma ve Sıfır Atık (Zero Waste) yasası",
+    "scientific_basis": "Çöp depolama alanlarının (Landfill) ömrünü uzatır, geri dönüşüm endüstrisine hammadde sağlar. Uymayan vatandaşlara ağır cezalar verilmesi halkta homurdanma yaratır.",
+    "economy_impact": 10,
+    "environment_impact": 20,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ATIK_02",
+    "action_name": "Enerji üreten dev Çöp Yakma (Incineration) tesisi inşası",
+    "scientific_basis": "Atık hacmini %90 azaltır ve elektrik üretir. Ancak toksik kül bırakır ve atmosfere dioksin salınımı riski yerel halkın sert protestolarına (NIMBY) neden olur.",
+    "economy_impact": 15,
+    "environment_impact": -10,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "ATIK_03",
+    "action_name": "E-Atık (Elektronik çöp) ithalatının serbest bırakılması",
+    "scientific_basis": "Gelişmiş ülkelerin çöplerinden değerli metaller (altın, gümüş) ayrıştırılarak büyük ekonomik kazanç sağlanır. Zehirli kimyasallar ülkenin toprağına ve işçi sağlığına zarar verir.",
+    "economy_impact": 20,
+    "environment_impact": -25,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "ATIK_04",
+    "action_name": "Tüm içecek ambalajlarına yüksek bedelli Depozito sistemi",
+    "scientific_basis": "Plastik ve cam kirliliğini doğadan tamamen siler. Oyunlaştırma (Sun vd., 2023) benzeri bir maddi motivasyonla halkın katılımını sağlar.",
+    "economy_impact": 5,
+    "environment_impact": 20,
+    "society_impact": 15
+  },
+  {
+    "scenario_id": "ATIK_05",
+    "action_name": "Restoran ve marketlerde Gıda İsrafına ağır cezalar",
+    "scientific_basis": "Dünyada üretilen gıdanın 1/3'ü çöpe giderken (FAO), bunu önlemek gıda güvenliğini artırır. İşletmeler satılmayan ürünleri bağışlamak için lojistik maliyet yüklenir.",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "ATIK_06",
+    "action_name": "Ormanlara ve vadilere 'Vahşi Çöp Depolama' izni verilmesi",
+    "scientific_basis": "Belediyelerin atık bertaraf maliyetini sıfıra indirir (en ucuz yöntem). Ancak sızıntı suları yeraltı sularını zehirler, metan patlaması riski yaratır ve ekosistemi mahveder.",
+    "economy_impact": 15,
+    "environment_impact": -30,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "ATIK_07",
+    "action_name": "Kanalizasyon ve atık su arıtma tesislerinin özelleştirilmesi",
+    "scientific_basis": "Devletin sırtından işletme yükünü alır. Özel şirket karını maksimize etmek için su faturalarına fahiş zam yapar, yoksul halk temiz suya erişemez.",
+    "economy_impact": 15,
+    "environment_impact": 0,
+    "society_impact": -25
+  },
+  {
+    "scenario_id": "ATIK_08",
+    "action_name": "Çamaşır makinelerine zorunlu mikroplastik filtresi",
+    "scientific_basis": "Kıyafetlerden kopan sentetik mikroliflerin denizlere ulaşmasını engeller. Beyaz eşya fiyatları artar, halkın alım gücünü zorlar.",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ATIK_09",
+    "action_name": "Tehlikeli ve Tıbbi Atık bertaraf vergisinin düşürülmesi",
+    "scientific_basis": "Hastane ve sanayinin maliyetlerini düşürür. Ancak denetimsizlik ve ucuzluk nedeniyle tehlikeli atıkların doğaya karışma (illegal döküm) riskini çok artırır.",
+    "economy_impact": 10,
+    "environment_impact": -20,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ATIK_10",
+    "action_name": "Sokak toplayıcılarının (Geri dönüşüm işçileri) sisteme entegre edilmesi",
+    "scientific_basis": "Kayıtdışı ekonomiyi kayıt altına alır, işçilere sosyal güvence (sigorta) verir. Toplama verimi artar. Devlet için yeni bir istihdam kalemi ve maliyettir.",
+    "economy_impact": 5,
+    "environment_impact": 10,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "DOGA_01",
+    "action_name": "Milli Parkların imara ve madenciliğe daraltılması",
+    "scientific_basis": "Ekonomik daralma döneminde acil nakit ve hammadde yaratır. Ancak endemik türlerin yok olmasına ve biyoçeşitlilik krizine (IPBES raporu) neden olur.",
+    "economy_impact": 25,
+    "environment_impact": -30,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "DOGA_02",
+    "action_name": "Ülke çapında mega Ağaçlandırma (Reforestation) seferberliği",
+    "scientific_basis": "Karbon yutağı alanlarını genişletir, erezyonu önler. Oyunlaştırma uygulamalarıyla (Ant Forest) desteklenirse toplumsal moral de sağlar. Alanlar başka ekonomik faaliyetlere kapanır.",
+    "economy_impact": -10,
+    "environment_impact": 25,
+    "society_impact": 15
+  },
+  {
+    "scenario_id": "DOGA_03",
+    "action_name": "Tüm yaban hayatı avlanma faaliyetlerinin süresiz yasaklanması",
+    "scientific_basis": "Zayıflayan hayvan popülasyonlarını korur. Turizm ve silah sektörüne bağlı lokal ekonomileri çökertir, kırsal kesimdeki avcı toplulukların tepkisini çeker.",
+    "economy_impact": -10,
+    "environment_impact": 20,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "DOGA_04",
+    "action_name": "Sivrisinek ve tarım zararlıları için ağır DDT kimyasal ilaçlaması",
+    "scientific_basis": "Hastalık bulaşmasını ve tarım kayıplarını çok hızlı engeller. Ancak Rachel Carson'ın Sessiz Bahar kitabında anlattığı gibi besin zincirini zehirler ve kuşları öldürür.",
+    "economy_impact": 15,
+    "environment_impact": -25,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "DOGA_05",
+    "action_name": "Karasularının %30'unun Tam Korunmalı Deniz Alanı (MPA) ilanı",
+    "scientific_basis": "Aşırı avlanmayı durdurur, balık stoklarının kendini yenilemesine imkan tanır. Balıkçılık endüstrisi büyük zarar görür, kısa vadede deniz ürünleri pahalanır.",
+    "economy_impact": -15,
+    "environment_impact": 25,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "DOGA_06",
+    "action_name": "Büyük otoyolların üzerine 'Ekolojik Köprüler' yapılması",
+    "scientific_basis": "Habitat bölünmesini engeller, yaban hayvanı trafik kazalarını (Roadkill) düşürür. Karayolları bütçesine ekstra yük getirir ancak ekosistem bütünlüğünü korur.",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "DOGA_07",
+    "action_name": "Sulak alanların (Bataklıkların) kurutulup tarıma/imara açılması",
+    "scientific_basis": "Yeni rant alanları yaratır. Ancak sulak alanlar dünyanın böbrekleridir; kurutulması iklimi değiştirir, göçmen kuşları yok eder ve yeraltı suyunu tüketir.",
+    "economy_impact": 20,
+    "environment_impact": -25,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "DOGA_08",
+    "action_name": "Terk edilmiş maden sahalarının devlet bütçesiyle rehabilitasyonu",
+    "scientific_basis": "Kirletilmiş toprakları temizler ve doğaya kazandırır. Devlete hiçbir ekonomik getirisi olmayan, tamamen maliyet odaklı ama ekolojik bir hamledir.",
+    "economy_impact": -15,
+    "environment_impact": 20,
+    "society_impact": 10
+  },
+  {
+    "scenario_id": "DOGA_09",
+    "action_name": "İstilacı türlerle mücadele için genetik mühendisliği kullanımı",
+    "scientific_basis": "Ekosisteme zarar veren sonradan gelme türleri kısırlaştırma vb. yollarla yok eder. Biyolojik silah riski ve bilinmeyen ekolojik yan etkiler nedeniyle toplumsal korku yaratır.",
+    "economy_impact": 5,
+    "environment_impact": 10,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "DOGA_10",
+    "action_name": "Tüm orman köylülerinin ormandan çıkarılıp şehre taşınması",
+    "scientific_basis": "Orman içi insan baskısını (kaçak kesim, yangın, otlatma) sıfıra indirir. Binlerce insanın yaşam biçimini zorla değiştirerek kültürel ve sosyal travma yaratır.",
+    "economy_impact": -10,
+    "environment_impact": 20,
+    "society_impact": -25
+  },
+  {
+    "scenario_id": "KRIZ_01",
+    "action_name": "BM Yeşil İklim Fonu'na bütçeden devasa hibe yapılması",
+    "scientific_basis": "Küresel iklim adaleti için gelişmekte olan ülkelere yardım eder. Küresel itibarı artırır ancak iç ekonomide kriz varken yurtdışına para yollamak halkı öfkelendirir.",
+    "economy_impact": -15,
+    "environment_impact": 10,
+    "society_impact": -20
+  },
+  {
+    "scenario_id": "KRIZ_02",
+    "action_name": "Salgın hastalık riski nedeniyle ülke çapında 3 aylık tam kapanma (Lockdown)",
+    "scientific_basis": "Pandemiyi durdurur, hava kirliliği rekor seviyede düşer (Doğa nefes alır). Ancak ekonomi resesyona girer, işsizlik patlar ve halkın psikolojisi çöker.",
+    "economy_impact": -30,
+    "environment_impact": 25,
+    "society_impact": -25
+  },
+  {
+    "scenario_id": "KRIZ_03",
+    "action_name": "Ormanları yok eden ülkelere karşı katı Ticaret Ambargosu",
+    "scientific_basis": "Küresel ölçekte doğa korumayı zorlar. Karşı ambargolar nedeniyle dış ticaret çöker, ithal mallar karaborsaya düşer ve ekonomi zarar görür.",
+    "economy_impact": -20,
+    "environment_impact": 15,
+    "society_impact": -10
+  },
+  {
+    "scenario_id": "KRIZ_04",
+    "action_name": "Yapay Zeka (AI) veri merkezlerine %100 yenilenebilir enerji zorunluluğu",
+    "scientific_basis": "Kripto ve AI sektörünün artan devasa elektrik talebinin (su ve karbon ayak izinin) çevreyi yok etmesini önler. Teknoloji devleri yatırımlarını durdurabilir.",
+    "economy_impact": -10,
+    "environment_impact": 20,
+    "society_impact": 5
+  },
+  {
+    "scenario_id": "KRIZ_05",
+    "action_name": "Aşırı sıcak dalgaları sırasında ağır sanayi üretiminin zorunlu durdurulması",
+    "scientific_basis": "Şebekenin çökmesini engeller, işçi sağlığını (Sıcak Çarpması) korur. Planlı olmayan üretim kesintileri ihracat kotalarını vurur ve ekonomiyi sarsar.",
+    "economy_impact": -20,
+    "environment_impact": 10,
+    "society_impact": 15
+  },
+  {
+    "scenario_id": "KRIZ_06",
+    "action_name": "Siber Güvenlik altyapısına ayrılan bütçenin fosil yatırımlardan kesilerek artırılması",
+    "scientific_basis": "Kritik altyapıyı (barajlar, santraller) hackerlardan korur. Devlet güvenliğini artırır. Fosil sektör lobisi zayıflar, dolaylı çevre faydası vardır.",
+    "economy_impact": 10,
+    "environment_impact": 5,
+    "society_impact": 15
+  },
+  {
+    "scenario_id": "KRIZ_07",
+    "action_name": "Mega deprem/sel sonrası 1 aylık Ulusal Yas ve vergi affı",
+    "scientific_basis": "Toplumsal travmayı onarmaya yardımcı olur. Ancak vergi tahsilatı duracağı için hazine tamtakır kalır, krizle mücadele fonu tükenir.",
+    "economy_impact": -25,
+    "environment_impact": 0,
+    "society_impact": 25
+  },
+  {
+    "scenario_id": "KRIZ_08",
+    "action_name": "Tarım arazilerini korumak için nüfus kontrolü / çocuk sınırı politikası",
+    "scientific_basis": "Ekolojik taşıma kapasitesini (Carrying Capacity) zorlayan nüfus artışını durdurur. İnsan hakları ihlali olarak görülür ve toplumda devasa nefrete neden olur.",
+    "economy_impact": -10,
+    "environment_impact": 20,
+    "society_impact": -30
+  },
+  {
+    "scenario_id": "KRIZ_09",
+    "action_name": "Kritik tedarik zinciri (Gıda/Tıbbi) krizinde tüm özel sektör stoklarına el konulması",
+    "scientific_basis": "Vurgunculuğu ve karaborsayı engeller, halkın acil ihtiyacını karşılar. Ancak serbest piyasa güvenini tamamen yıkar, yabancı yatırımcı ülkeyi bir gecede terk eder.",
+    "economy_impact": -30,
+    "environment_impact": 0,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "KRIZ_10",
+    "action_name": "Uzay madenciliği (Asteroit) Ar-Ge'sine ulusal kaynakların yarısının ayrılması",
+    "scientific_basis": "Dünyanın ekolojik sınırlarını (Planetary Boundaries) aşmak için gezegen dışı kaynak arayışı. Bugünkü neslin cebinden ve refahından kesilir, riskli bir kumardır.",
+    "economy_impact": -25,
+    "environment_impact": 5,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "ALTERNATIF_01",
+    "action_name": "Et ve süt ürünleri reklamlarının yasaklanması",
+    "scientific_basis": "Tütün ürünleri gibi karbon yoğun gıdaların tüketimini davranışsal olarak düşürür. Tarım lobisini kızdırır, medya sektörünün reklam gelirlerini düşürür.",
+    "economy_impact": -10,
+    "environment_impact": 15,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ALTERNATIF_02",
+    "action_name": "Sertifikasız ahşap ve mobilya satışının hapisle cezalandırılması",
+    "scientific_basis": "Kaçak ağaç kesimini anında durdurur (FSC standartı). Mobilya sektöründe fiyatlar uçar ve merdiven altı atölyeler batar.",
+    "economy_impact": -15,
+    "environment_impact": 20,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ALTERNATIF_03",
+    "action_name": "Lüks yat ve özel jet kullanımına Astronomik Karbon Vergisi",
+    "scientific_basis": "Ultra zenginlerin orantısız emisyonlarına karşı iklim adaleti sağlar. Sembolik çevresel etkisi olsa da, toplumsal adalet hissini güçlendirir.",
+    "economy_impact": -5,
+    "environment_impact": 5,
+    "society_impact": 25
+  },
+  {
+    "scenario_id": "ALTERNATIF_04",
+    "action_name": "Ülkedeki tüm askeri tatbikatların ve silah testlerinin durdurulması",
+    "scientific_basis": "Görünmez bir kirletici olan orduların emisyon ve toksik kalıntılarını sıfırlar. Ulusal güvenlik algısı zayıflar, jeopolitik riskler artar.",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "ALTERNATIF_05",
+    "action_name": "Belediye hizmetlerinde 'Oyunlaştırma' (Vatandaş Karbon Kredisi) uygulaması",
+    "scientific_basis": "Vatandaşları geri dönüşüme ve yeşil ulaşıma teşvik eder (Ant Forest örneği). Alışkanlıkları değiştirir, toplumu mutlu eder, başlangıç yazılım/uygulama maliyeti vardır.",
+    "economy_impact": 5,
+    "environment_impact": 15,
+    "society_impact": 20
+  },
+  {
+    "scenario_id": "ALTERNATIF_06",
+    "action_name": "Tüm devlet dairelerinde kağıt kullanımının tamamen yasaklanması",
+    "scientific_basis": "Orman kıyımını azaltır, dijitalleşmeyi zorunlu kılar. İleri yaş bürokratlar ve dijital okuryazarlığı olmayan vatandaşlar sistemde tıkanıklık yaşar.",
+    "economy_impact": 10,
+    "environment_impact": 10,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ALTERNATIF_07",
+    "action_name": "Petrol krizinde ülke çapında 'Tek/Çift Plaka' uygulaması",
+    "scientific_basis": "Trafiğe çıkan araç sayısını yarıya indirerek yakıt tasarrufu sağlar ve emisyonları keser. Vatandaşın ulaşım özgürlüğü kısıtlanır, işe gidişler aksar.",
+    "economy_impact": -15,
+    "environment_impact": 20,
+    "society_impact": -15
+  },
+  {
+    "scenario_id": "ALTERNATIF_08",
+    "action_name": "Sahipsiz sokak hayvanlarının uyutulması (İtlaf)",
+    "scientific_basis": "Yaban hayatı üzerindeki avcı baskısını (kuş ve sürüngen ölümlerini) ve kuduz riskini azaltır. Ancak hayvan hakları savunucuları ve toplumun büyük bir kesiminde devasa bir infial/ayaklanma yaratır.",
+    "economy_impact": 0,
+    "environment_impact": 5,
+    "society_impact": -30
+  },
+  {
+    "scenario_id": "ALTERNATIF_09",
+    "action_name": "Endüstriyel yosun (Mikroalg) çiftliklerine kıyılarda bedelsiz alan tahsisi",
+    "scientific_basis": "Ormanlardan kat kat fazla karbon emen ve biyoyakıt potansiyeli olan devrimsel bir sektördür. Geleneksel balıkçıların alanlarını daraltır.",
+    "economy_impact": 10,
+    "environment_impact": 20,
+    "society_impact": -5
+  },
+  {
+    "scenario_id": "ALTERNATIF_10",
+    "action_name": "Ekosistem Katliamının (Ecocite) savaş suçu sayılması yasası",
+    "scientific_basis": "Çevreye zarar veren CEO'ların ve siyasetçilerin yargılanmasının önünü açar. Şirketler yasal korkuyla yatırımları durdurabilir.",
+    "economy_impact": -20,
+    "environment_impact": 25,
+    "society_impact": 15
+  }
+]
