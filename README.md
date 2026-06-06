@@ -35,7 +35,7 @@ Oyun, yapay zekadan her defasında **2 derinlikli (Depth-2) iç içe geçmiş (n
 ## 🚀 Kurulum
 
 1. Bu projeyi Unity Hub üzerinden açın (Proje Unity sürümünüzle uyumlu olmalıdır).
-2. Projenin kök dizininde (`Assets` klasörünün yanında) bir `.env` dosyası oluşturun ve içerisine `GEMINI_API_KEY=SİZİN_ANAHTARINIZ` şeklinde Gemini API anahtarınızı ekleyin. (Bu dosya `.gitignore` içinde olduğu için GitHub'a gitmeyecektir).
+2. Projenin içinde `Assets/Resources` klasörüne gidin (yoksa oluşturun). İçine `API_KEY.txt` adında bir metin belgesi açın ve içerisine Gemini API anahtarınızı (örneğin `AIzaSy...`) yapıştırın. Bu dosya GitHub'a gönderilmeyecek şekilde yapılandırılmıştır ve Build aldığınızda otomatik olarak şifrelenip `.exe` içine gömülecektir.
 3. Oyunun ana sahnesini (`MainScene`) açın ve **Play** butonuna basarak ülkenizi yönetmeye başlayın!
 
 ## 📜 Hakkında

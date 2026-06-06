@@ -30,29 +30,14 @@ public class GenAIService
         string apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY");
         if (!string.IsNullOrEmpty(apiKey)) return apiKey;
 
-        // Bulunamazsa proje dizinindeki .env dosyasından okumayı dene
-        try
+        // Unity Resources klasöründen (Assets/Resources/API_KEY.txt) oku
+        TextAsset keyAsset = Resources.Load<TextAsset>("API_KEY");
+        if (keyAsset != null && !string.IsNullOrWhiteSpace(keyAsset.text))
         {
-            // Application.dataPath normalde Assets klasörüdür, .env bir üstte (kök dizinde) bulunur
-            string envPath = System.IO.Path.Combine(Application.dataPath, "../.env");
-            if (System.IO.File.Exists(envPath))
-            {
-                string[] lines = System.IO.File.ReadAllLines(envPath);
-                foreach (var line in lines)
-                {
-                    if (line.StartsWith("GEMINI_API_KEY="))
-                    {
-                        return line.Substring("GEMINI_API_KEY=".Length).Trim();
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning($".env dosyası okunurken hata oluştu: {e.Message}");
+            return keyAsset.text.Trim();
         }
 
-        Debug.LogError("GEMINI_API_KEY bulunamadı! Lütfen proje kök dizinine .env dosyası ekleyin veya sistem değişkenlerine tanımlayın.");
+        Debug.LogError("GEMINI_API_KEY bulunamadı! Lütfen Assets/Resources/API_KEY.txt dosyasını oluşturun veya sistem değişkenlerine tanımlayın.");
         return "";
     }
 

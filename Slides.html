@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YapayDenge Proje Sunumu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* GENEL KURALLAR VE RESET */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f172a;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Urbanist', sans-serif;
+        }
+
+        /* SLAYT KONTEYNERİ */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #050505;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            display: none;
+            flex-direction: column;
+            padding: 60px 80px;
+            position: relative;
+            overflow: hidden;
+            justify-content: flex-start;
+            border: 1px solid #1f2937;
+        }
+
+        .slide-container.active {
+            display: flex;
+        }
+
+        /* YÖNLENDİRME BUTONLARI */
+        .nav-container {
+            position: fixed;
+            bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background-color: #1e293b;
+            color: #deff9a;
+            border: 1px solid #deff9a;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Urbanist', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background-color: #deff9a;
+            color: #0f172a;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #334155;
+            color: #334155;
+        }
+
+        .slide-counter {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 500;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* ARKA PLAN EFEKTLERİ */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(222, 255, 154, 0.08) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .slide-container::after {
+            background: linear-gradient(90deg, transparent, rgba(222, 255, 154, 0.3), transparent);
+            bottom: 40px;
+            content: '';
+            height: 1px;
+            left: 80px;
+            position: absolute;
+            right: 80px;
+        }
+
+        .slide-container>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* TİPOGRAFİ */
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #f8fafc;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        h1 span,
+        h2 span,
+        .accent {
+            color: #deff9a;
+        }
+
+        p,
+        li,
+        .subtitle {
+            color: #cbd5e1;
+            font-size: 20px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        strong {
+            color: #f8fafc;
+            font-weight: 700;
+        }
+
+        .slide-title {
+            font-size: 48px;
+            margin-bottom: 40px;
+            text-align: left;
+            width: 100%;
+            border-left: 6px solid #deff9a;
+            padding-left: 20px;
+        }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* KAPAK VE ARA BAŞLIK YERLEŞİMLERİ */
+        .title-layout,
+        .section-title-layout {
+            text-align: center;
+            justify-content: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title-layout h1 {
+            font-size: 85px;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .section-title-layout h2 {
+            font-size: 65px;
+            letter-spacing: -1px;
+        }
+
+        .section-title-layout hr {
+            border: none;
+            height: 4px;
+            background: #deff9a;
+            width: 100px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* İÇERİK YERLEŞİMLERİ */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+
+        .tile {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 35px;
+            border: 1px solid #1e293b;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .tile:hover {
+            transform: translateY(-5px);
+            border-color: #deff9a;
+        }
+
+        .tile .icon {
+            font-size: 45px;
+            color: #deff9a;
+            margin-bottom: 20px;
+        }
+
+        .tile h3 {
+            font-size: 26px;
+            margin-bottom: 15px;
+            color: #f8fafc;
+        }
+
+        /* LİSTELER */
+        .bullet-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .bullet-list li {
+            margin-bottom: 20px;
+            padding-left: 35px;
+            position: relative;
+            font-size: 22px;
+        }
+
+        .bullet-list li::before {
+            content: '\f0da';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: #deff9a;
+        }
+
+        /* ÖZEL VURGU KUTULARI */
+        .highlight-box {
+            background: rgba(222, 255, 154, 0.05);
+            border-left: 4px solid #deff9a;
+            padding: 25px 30px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 20px;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-size: 22px;
+            color: #f8fafc;
+            font-style: italic;
+        }
+
+        .math-formula {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 30px;
+            font-family: monospace;
+            color: #deff9a;
+            letter-spacing: 2px;
+            margin: 30px 0;
+            border: 1px dashed #334155;
+        }
+
+        .big-number {
+            font-size: 140px;
+            font-weight: 800;
+            color: #deff9a;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .big-number span {
+            font-size: 60px;
+        }
+
+        /* TABLOLAR */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .custom-table th {
+            background: #0f172a;
+            padding: 20px;
+            text-align: left;
+            color: #deff9a;
+            font-size: 22px;
+            border-bottom: 2px solid #1e293b;
+        }
+
+        .custom-table td {
+            padding: 20px;
+            border-bottom: 1px solid #1e293b;
+            color: #cbd5e1;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SLAYT 1: KAPAK -->
+    <div class="slide-container active">
+        <div class="title-layout">
+            <h1>Yapay<span>Denge</span></h1>
+            <p class="subtitle" style="font-size: 26px; max-width: 900px;">Uzun Vadeli Kararların Ekosistem Üzerindeki
+                Etkilerini Modelleyen Ciddi Oyun</p>
+            <div
+                style="margin-top: 60px; color: #94a3b8; font-size: 20px; font-weight: 400; border-top: 1px solid #334155; padding-top: 20px;">
+                <strong style="color:#f8fafc;">Sunucu:</strong> Mehmet Metehan Çavdar &nbsp;&nbsp;|&nbsp;&nbsp; <strong
+                    style="color:#f8fafc;">Danışman:</strong> Doç. Dr. Murat Yılmaz<br>
+                BM496 Bilgisayar Mühendisliği Projesi II
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 2: VİZYON -->
+    <div class="slide-container">
+        <h2 class="slide-title">Proje Vizyonu ve <span>"Ciddi Oyun"</span> Kavramı</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p style="font-size: 24px;">YapayDenge, sadece eğlence odaklı klasik bir simülasyon değil; pedagojik
+                        temeller üzerine inşa edilmiş bir <strong>Kriz Yönetimi</strong> aracıdır.</p>
+                    <br>
+                    <div class="bullet-list">
+                        <ul>
+                            <li>Geleneksel "Hard-Coded" (önceden yazılmış) ve kısıtlı senaryoların ötesine geçiş.</li>
+                            <li>Generative AI ile her oynanışta eşsiz krizler üretimi.</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-box">
+                        <p>"Sınırsız büyüme felaket getirir."</p>
+                    </div>
+                </div>
+                <div class="tile"
+                    style="justify-content: center; align-items: center; text-align: center; background: #0f172a;">
+                    <i class="fa-solid fa-earth-americas"
+                        style="font-size: 150px; color: #334155; margin-bottom: 30px;"></i>
+                    <h3 style="font-size: 32px; color: #deff9a;">Eğitim & Mühendislik</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 3: FRAKSİYONLAR -->
+    <div class="slide-container">
+        <h2 class="slide-title">Fraksiyon Sistemi ve <span>Matematiksel Denge</span></h2>
+        <div class="content-area">
+            <p style="margin-bottom: 40px; font-size: 24px;">Kazan-Kazan durumu yoktur; her kararın bir
+                <strong>Ödünleşimi (Trade-off)</strong> vardır.
+            </p>
+            <div class="three-column">
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3>Ekonomi</h3>
+                    <p>Üretim hızı ve finans. Ancak agresif büyüme, ekosistemi hızla tüketir ve halkın refahını
+                        tehlikeye atar.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-leaf"></i></div>
+                    <h3>Çevre</h3>
+                    <p>Sürdürülebilirlik. Değerin <span class="accent">0'a inmesi</span> doğrudan ekolojik çöküş
+                        demektir.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-users"></i></div>
+                    <h3>Halk / Toplum</h3>
+                    <p>Refah seviyesi. Halk çevrenin ve sürdürülebilirliğinin önemini bilse de Zenginlik içinde yaşamak
+                        ister.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 4: MİMARİ KATMANLAR -->
+    <div class="slide-container">
+        <h2 class="slide-title">Sistemin <span>Mimari Katmanları</span></h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div class="bullet-list">
+                    <ul>
+                        <li><strong>GenAIService:</strong> LLM ile HTTP POST üzerinden asenkron iletişim kuran köprü
+                            katmanı.</li>
+                        <li><strong>JsonToSoConverter:</strong> Gelen JSON verisini Unity'nin Scriptable Object yapısına
+                            uyarlayan Adapter modülü.</li>
+                        <li><strong>DecisionTreeController:</strong> Olay akışını ve bellekteki senaryo ağacını yöneten
+                            oyun yöneticisi.</li>
+                        <li><strong>UIManager:</strong> Update (polling) yerine <em>Observer Pattern</em> kullanarak
+                            sadece veri değiştiğinde tepki veren optimize görsel katman.</li>
+                    </ul>
+                </div>
+                <div class="tile" style="border-style: dashed;">
+                    <div class="icon"><i class="fa-solid fa-sitemap"></i></div>
+                    <h3>Modüler Tasarım (Decoupled)</h3>
+                    <p>Sistem bileşenleri birbirine sıkı sıkıya bağlı değildir. Yarın Gemini API yerine OpenAI veya
+                        LLaMa kullanılmak istendiğinde sadece servis katmanı güncellenir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 5: RAG YAKLAŞIMI -->
+    <div class="slide-container">
+        <h2 class="slide-title">LLM Optimizasyonu: <span>RAG Yaklaşımı</span></h2>
+        <div class="content-area">
+            <p style="font-size: 24px; margin-bottom: 30px;">Büyük dil modellerinin (LLM) en büyük zafiyeti olan
+                <strong>Halüsinasyonları</strong> engelleme stratejisi (Bölüm 1):
+            </p>
+            <div class="tile" style="margin-top: 20px;">
+                <h3><i class="fa-solid fa-database" style="color: #deff9a; margin-right: 15px;"></i>RAG
+                    (Retrieval-Augmented Generation)</h3>
+                <p style="font-size: 22px; margin-top: 20px;">Oyuncunun geçmişteki son 3 kararı ve güncel fraksiyon
+                    puanları bağlam (Context) olarak her API isteğinde enjekte edilir. Bu sayede:</p>
+                <div class="bullet-list" style="margin-top: 20px;">
+                    <ul>
+                        <li>Senaryo tutarlılığı kopmaz.</li>
+                        <li>Önceki olayların sonuçları yeni krizleri tetikler.</li>
+                        <li>Oyunun hafızası sürekli güncel tutulur.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 6: GROUND TRUTH -->
+    <div class="slide-container">
+        <h2 class="slide-title">LLM Optimizasyonu: <span>Ground Truth</span></h2>
+        <div class="content-area">
+            <p style="font-size: 24px; margin-bottom: 30px;">Büyük dil modellerinin (LLM) en büyük zafiyeti olan
+                <strong>Halüsinasyonları</strong> engelleme stratejisi (Bölüm 2):
+            </p>
+            <div class="two-column" style="align-items: stretch;">
+                <div class="tile">
+                    <h3><i class="fa-solid fa-book-journal-whills" style="color: #deff9a; margin-right: 15px;"></i>Kesin
+                        Gerçeklik</h3>
+                    <p>Hazırlanan 100 farklı bilimsel referans veritabanından, her tur rastgele 5 tanesi seçilerek
+                        prompt içine "Kesin Gerçeklik" olarak yerleştirilir. AI, olayları bu bilimsel yasalara dayanarak
+                        üretmek zorunda kalır.</p>
+                </div>
+                <div class="tile" style="background: #1e293b; border-color: #334155;">
+                    <h3 style="font-size: 20px; color: #94a3b8; margin-bottom: 15px;"><i class="fa-solid fa-code"></i>
+                        Örnek JSON Verisi</h3>
+                    <pre
+                        style="color: #deff9a; font-family: monospace; font-size: 16px; margin: 0; white-space: pre-wrap;">
+  {
+    "scenario_id": "ENERJI_07",
+    "action_name": "Binalarda zorunlu ısı yalıtımı yasası",
+    "scientific_basis": "Bina sektöründeki enerji israfını ciddi oranda azaltır. Ev sahipleri için yenileme maliyeti yaratsa da uzun vadeli fatura düşüşü halkı rahatlatır (IEA Energy Efficiency).",
+    "economy_impact": -5,
+    "environment_impact": 15,
+    "society_impact": 10
+  },</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 6: GECİKME PROBLEMİ -->
+    <div class="slide-container">
+        <div class="section-title-layout">
+            <hr>
+            <h2>Temel Mühendislik Problemi: <br><span>Gecikme (Latency)</span></h2>
+            <p style="margin-top: 30px; max-width: 800px; font-size: 24px;">Bulut tabanlı LLM API'lerinin doğası gereği
+                yanıt süreleri 3-6 saniye arasındadır. Her karardan sonra saniyelerce beklemek, oyunun akıcılığını ve
+                <strong>"Sihirli Çember" (Magic Circle)</strong> illüzyonunu parçalar.
+            </p>
+        </div>
+    </div>
+
+    <!-- SLAYT 7: PF1 - PRE-FETCHING NEDİR -->
+    <div class="slide-container">
+        <h2 class="slide-title">Çözüm Denemesi 1: <span>Asenkron Pre-Fetching</span></h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p><strong>Önceden Yükleme (Pre-Fetching) Nedir?</strong></p>
+                    <p>Oyuncu ekrandaki mevcut olayı okuyup değerlendirirken, sistemin boşta beklemeyip arka planda
+                        olası seçeneklerin senaryolarını API'den gizlice talep etmesidir.</p>
+                    <br>
+                    <div class="bullet-list">
+                        <ul>
+                            <li>Oyun döngüsü (Main Thread) bloklanmaz.</li>
+                            <li>C# asenkron Task'ları (async/await) ile paralel yürütülür.</li>
+                            <li>Oyuncu tıklayana kadar veriler RAM'de hazır bekler.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tile" style="align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-bolt" style="font-size: 80px; color: #deff9a; margin-bottom: 20px;"></i>
+                    <h3 style="text-align: center;">Gizli Veri Akışı</h3>
+                    <p style="text-align: center;">Zaman maliyeti, oyuncunun "Düşünme Süresi" içine gizlenir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 8: PF2 - UX KATKISI -->
+    <div class="slide-container">
+        <h2 class="slide-title">Pre-Fetching'in UX'e Katkısı: <span>0ms Gecikme</span></h2>
+        <div class="content-area" style="align-items: center;">
+            <div class="big-number">0<span>ms</span></div>
+            <p style="font-size: 28px; font-weight: 500; color: #f8fafc;">Algılanan Yükleme Süresi</p>
+
+            <div class="highlight-box"
+                style="width: 80%; margin-top: 50px; text-align: center; border-left: none; border-bottom: 4px solid #deff9a; border-radius: 12px 12px 0 0;">
+                <p>"Oyuncu butona tıkladığı an yükleme (Loading) ekranı ile karşılaşmaz. Sonraki senaryo, ağ trafiği
+                    engellerine takılmaksızın yerel bellekten anında ekrana basılır. Simülasyon akıcılığı kusursuzdur."
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 9: PF3 - UX VS MALIYET -->
+    <div class="slide-container">
+        <h2 class="slide-title">Mühendislik Ödünleşimi: <span>UX vs. Maliyet</span></h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p>Sistem sınırları (System Bounds) testlerinde, kusursuz kullanıcı deneyiminin (UX) bedava olmadığı
+                        görülmüştür.</p>
+                    <br>
+                    <p>Eğer proje "Premium" veya yüksek abonelikli bir model olsaydı, bu maliyet göğüslenebilirdi.
+                        Yapılan testlerde bulunan "Altın Oran":</p>
+                    <div class="bullet-list" style="margin-top: 20px;">
+                        <ul>
+                            <li><span class="accent">4 Derinlik (Depth)</span></li>
+                            <li><span class="accent">2 Seçenek (Options)</span></li>
+                            <li>Sadece 4. yaprak düğümde Pre-Fetch tetiklemesi.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <h3>Sistem Performans Zirvesi</h3>
+                    <p>Bu altın oran, yüksek maliyetli ancak en güçlü yapay zeka modelleri (Örn: GPT-4, Claude 3.5 Opus)
+                        kullanıldığında en stabil performansı veren konfigürasyon olarak kayıtlara geçmiştir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 10: PF4 - VAZGEÇİŞ -->
+    <div class="slide-container">
+        <h2 class="slide-title">Neden Pre-Fetching'den <span>Vazgeçildi?</span></h2>
+        <div class="content-area">
+            <p style="font-size: 24px;">Geleneksel 4 seçenekli bir oyun ağacında API istekleri logaritmik olarak patlar.
+            </p>
+
+            <div class="math-formula">
+                Gerçek Maliyet = Tekil Maliyet × (Seçenek Sayısı)
+            </div>
+
+            <div class="three-column" style="margin-top: 20px;">
+                <div class="tile" style="border-color: #ef4444;">
+                    <h3 style="color:#ef4444;"><i class="fa-solid fa-arrow-trend-up"></i> %400 Artış</h3>
+                    <p>Kullanıcıya 4 saniye kazandırmak, Token harcamasını en az 4 katına çıkardı.</p>
+                </div>
+                <div class="tile" style="border-color: #ef4444;">
+                    <h3 style="color:#ef4444;"><i class="fa-solid fa-server"></i> Sunucu İsrafı</h3>
+                    <p>Oyuncunun seçmediği diğer 3 dalın verisi, üretilip anında çöpe gidiyor.</p>
+                </div>
+                <div class="tile" style="border-color: #deff9a; background: rgba(222, 255, 154, 0.05);">
+                    <h3 style="color:#deff9a;"><i class="fa-solid fa-gavel"></i> Kesin Karar</h3>
+                    <p>Sürdürülebilirlik felsefesi ve ISO 25010 verimlilik standartları gereği bu israf reddedildi ve
+                        mimari değiştirildi.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 11: NJSON1 - YENİ ÇÖZÜM -->
+    <div class="slide-container">
+        <div class="section-title-layout">
+            <hr>
+            <h2>Peki Bekleme Nasıl Azaltıldı? <br><span>(Nested JSON)</span></h2>
+            <p style="margin-top: 30px; font-size: 24px;">Çözüm: Tekil ve sık API çağrıları yapmak yerine,<br>bütünsel
+                ve derin veri blokları talep etmek.</p>
+        </div>
+    </div>
+
+    <!-- SLAYT 12: NJSON2 - RULE OF 6 -->
+    <div class="slide-container">
+        <h2 class="slide-title">Nested JSON ve <span>"Rule of 6"</span> Eşiği</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p>LLM, tek bir yanıt şablonu içerisinde, sadece o turu değil, alt seçenekleriyle birlikte "Mini
+                        Karar Ağacı" döndürmeye zorlanır.</p>
+                    <div class="highlight-box">
+                        <p>Ampirik Test Bulgusu: Kritik Eşik</p>
+                        <p style="font-family: monospace; font-size: 24px; color: #ef4444; margin-top:10px;">[Derinlik +
+                            Seçenek Sayısı > 6]</p>
+                    </div>
+                    <p style="margin-top: 20px;">Eğer bu toplam 6'yı geçerse, LLM JSON formatını bozar ve <strong>Error
+                            Rate (Hata Oranı)</strong> logaritmik olarak artar.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3>Kararlı Yapı Standartları</h3>
+                    <div class="bullet-list" style="margin-top: 15px;">
+                        <ul>
+                            <li><strong>Derinlik 2:</strong> Maksimum 4 Seçenek</li>
+                            <li><strong>Derinlik 4:</strong> Maksimum 2 Seçenek</li>
+                        </ul>
+                    </div>
+                    <p style="margin-top: 15px;">Bu sınırlar içinde kalarak 1 API çağrısı ile oyuncuya ardışık turlar
+                        kesintisiz oynatılır.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 13: GHOST OBJECT -->
+    <div class="slide-container">
+        <h2 class="slide-title">Veri Parslama ve <span>Hayalet Obje</span> Çözümü</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div class="tile" style="background: rgba(239, 68, 68, 0.1); border-color: #ef4444;">
+                    <h3 style="color:#fca5a5;">Zafiyet: JsonUtility</h3>
+                    <p>Karar ağacının sonunu belirten <code>null</code> verisi, Unity'nin kütüphanesi tarafından
+                        algılanamaz. Bellekte alanları boş olan sahte bir "Hayalet Obje" (Ghost Object) yaratılır ve
+                        oyun boş butonlar göstererek kilitlenir.</p>
+                </div>
+                <div class="tile">
+                    <h3>Çözüm: Adapter Filtresi</h3>
+                    <p>Gelen DTO objesinin <code style="color:#deff9a;">title</code> alanının boş olup olmadığı
+                        denetlenir. Eğer boşsa, bu bir Ghost Object olarak işaretlenir ve manuel olarak <code
+                            style="color:#deff9a;">null</code> döndürülerek ağaç güvenle sonlandırılır.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 14: PRUNING -->
+    <div class="slide-container">
+        <h2 class="slide-title">Bellek Yönetimi: <span>Özyinelemeli Budama</span></h2>
+        <div class="content-area">
+            <p style="font-size: 24px; margin-bottom: 30px;">İç içe (Nested) JSON kullanmanın getirdiği devasa
+                <strong>RAM şişmesi (Memory Leak)</strong> riskini ortadan kaldırmak için:
+            </p>
+            <div class="two-column">
+                <div class="image-wrapper"
+                    style="height: 300px; display:flex; align-items:center; justify-content:center; background:#1e293b; border: 1px dashed #deff9a;">
+                    <i class="fa-solid fa-scissors" style="font-size: 100px; color: #deff9a;"></i>
+                </div>
+                <div class="bullet-list">
+                    <ul>
+                        <li><strong>Recursive Pruning:</strong> Oyuncu bir dalı seçtiğinde, "seçilmemiş" olan diğer tüm
+                            dallar taranır.</li>
+                        <li><strong>Fiziksel Kazıma:</strong> <code>DestroyImmediate</code> komutuyla bu veriler RAM'den
+                            anında silinir.</li>
+                        <li><strong>Optimizasyon:</strong> Unity Çöp Toplayıcı (Garbage Collector) yükü sıfırlanır, oyun
+                            FPS düşüşü yaşamaz.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 15: FALLBACK UI -->
+    <div class="slide-container">
+        <h2 class="slide-title">Hata Toleransı (Fault Tolerance) & <span>Emergency UI</span></h2>
+        <div class="content-area">
+            <p style="font-size: 24px; margin-bottom: 30px;">Dışa bağımlı (API) sistemlerin en büyük kabusu: İnternet
+                kopması veya Sunucu Çökmesi.</p>
+            <div class="two-column">
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-rotate-right"></i></div>
+                    <h3>1. Savunma Hattı</h3>
+                    <p>HTTP isteklerine katı bir <strong>15 Saniye Timeout</strong> sınırı konur ve ağ paket kayıplarına
+                        karşı otomatik Retry (Yeniden Deneme) mekanizması çalıştırılır.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>2. Savunma Hattı (Fallback)</h3>
+                    <p>Tüm limitler tükendiğinde oyunun çökmesi (Crash) engellenir. Sistemin içine gömülü lokal
+                        <strong>"Bakanlıktan Veri Alınamıyor"</strong> acil durum arayüzü devreye girer. Döngü korunur.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLAYT 16: STANDARTLAR -->
+    <div class="slide-container">
+        <h2 class="slide-title">Uluslararası Mühendislik <span>Standartları</span></h2>
+        <div class="content-area">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Standart</th>
+                        <th>Kapsam</th>
+                        <th>Projedeki Karşılığı (Kanıt)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ISO/IEC/IEEE 29148</strong></td>
+                        <td>Gereksinim Yönetimi</td>
+                        <td>Kapsamlı SRS Dokümantasyonu</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ISO/IEC 25010</strong></td>
+                        <td>Performans & Verimlilik</td>
+                        <td><span style="color:#deff9a;">Pre-Fetching'in iptali ile yapılan Maliyet Analizi</span> ve
+                            Nested JSON optimizasyonları.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IEEE 730</strong></td>
+                        <td>Kalite ve Test (QA)</td>
+                        <td>STD dokümanı, Ghost Object ve Fallback UI testleri.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SLAYT 17: KAPANIŞ -->
+    <div class="slide-container" style="text-align: center; justify-content: center;">
+        <i class="fa-solid fa-code" style="font-size: 80px; color: #deff9a; margin-bottom: 30px;"></i>
+        <h2 style="font-size: 70px;">Teşekkürler.</h2>
+        <p class="subtitle" style="margin-top: 20px;">Sorularınız memnuniyetle yanıtlanacaktır.</p>
+
+        <div style="margin-top: 60px; color: #94a3b8; font-size: 20px;">
+            YapayDenge Projesi | 2026<br>
+            Mehmet Metehan Çavdar
+        </div>
+    </div>
+
+    <!-- NAVİGASYON -->
+    <div class="nav-container">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i>
+            Önceki</button>
+        <div class="slide-counter" id="slideCounter">1 / 18</div>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">Sonraki <i
+                class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-container');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+
+        function updateNav() {
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+
+            if (currentSlide === 0) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+            if (currentSlide === slides.length - 1) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.disabled = false;
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateNav();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateNav();
+            }
+        }
+
+        // Klavye yön tuşları için dinleyici
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                prevSlide();
+            }
+        });
+
+        // Başlangıç durumu
+        updateNav();
+    </script>
+</body>
+
+</html>

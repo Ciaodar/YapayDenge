@@ -38,3 +38,7 @@ ExportedObj/
 .env.*
 /.junie
 /.vscode
+
+# API Key
+Assets/Resources/API_KEY.txt
+Assets/Resources/API_KEY.txt.meta
