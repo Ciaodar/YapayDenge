@@ -15,8 +15,6 @@ Bu belge, **YapayDenge** projesindeki yapay zeka (GenAI) entegrasyonunu, karar a
 * Her unsur **0 ile 100** arasında bir değere sahiptir (Başlangıç değerleri varsayılan olarak **50**'dir).
 * **Game Over (Oyun Bitti)** koşulları:
   * Herhangi bir unsurun değerinin **0 veya daha altına** düşmesi.
-  * Üç unsurun toplam puanının **170'in üzerine** çıkması (`MAX_TOTAL_SCORE = 170`). Bu kural, sınırsız büyüme yerine dengeli bir ekosistem yönetimini zorunlu kılar.
-
 ---
 
 ## 🤖 Sistem Bileşenleri ve Ajanlar

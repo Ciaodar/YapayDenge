@@ -446,7 +446,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Play
+  m_text: Oyna
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 63189499a6db77c408db4f248d88b938, type: 2}
   m_sharedMaterial: {fileID: -7452059641359382127, guid: 63189499a6db77c408db4f248d88b938, type: 2}
