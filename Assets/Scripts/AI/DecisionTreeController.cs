@@ -10,6 +10,12 @@ public class DecisionTreeController : MonoBehaviour
     private GenAIService aiService;
     private EventCardSO currentEventCard;
     private List<string> eventHistory = new List<string>();
+    private Task<EventCardSO>[] prefetchTasks = null;
+    private System.Threading.CancellationTokenSource[] prefetchCts = null;
+
+    [Header("Game Settings")]
+    [Tooltip("API beklerken oyuncuya gösterilecek siyah ekranın (yükleme animasyonunun) minimum milisaniye cinsinden süresi. (Örn: 4000 = 4 sn)")]
+    [SerializeField] private int minLoadingScreenMs = 4000;
 
     private void Start()
     {
@@ -35,7 +41,7 @@ public class DecisionTreeController : MonoBehaviour
 
     private async void FetchNewTree(string context)
     {
-        Debug.Log("Yeni bir Karar Ağacı API'den tek seferde (Nested) çekiliyor...");
+        Debug.Log("Yeni bir Karar Ağacı başlatılıyor...");
 
         if (uiManager != null)
         {
@@ -52,6 +58,18 @@ public class DecisionTreeController : MonoBehaviour
         int eco = factionManager != null ? factionManager.CurrentEconomy : 50;
         int env = factionManager != null ? factionManager.CurrentEnvironment : 50;
         int soc = factionManager != null ? factionManager.CurrentSociety : 50;
+
+        currentEventCard = await FetchNewTreeAsync(context, eco, env, soc);
+
+        if (uiManager != null)
+        {
+            uiManager.HideLoadingScreen();
+            if (currentEventCard != null) uiManager.DisplayEvent(currentEventCard);
+        }
+    }
+
+    private async Task<EventCardSO> FetchNewTreeAsync(string context, int eco, int env, int soc, System.Threading.CancellationToken ct = default)
+    {
         // Geçmişi bağlama ekleyelim ki AI Context-Aware olsun
         string fullContext = context;
         if (eventHistory.Count > 0)
@@ -59,21 +77,12 @@ public class DecisionTreeController : MonoBehaviour
             fullContext += "\n\nGeçmişte Yaşananlar ve Yapılan Seçimler:\n" + string.Join("\n", eventHistory);
         }
 
-        string jsonResponse = await aiService.GenerateEventAsync(fullContext, eco, env, soc);
-        currentEventCard = JsonToSoConverter.Convert(jsonResponse);
+        string jsonResponse = await aiService.GenerateEventAsync(fullContext, eco, env, soc, ct);
+        EventCardSO root = JsonToSoConverter.Convert(jsonResponse);
 
-        if (uiManager != null)
+        if (root == null)
         {
-            uiManager.HideLoadingScreen();
-        }
-
-        if (currentEventCard != null && uiManager != null)
-        {
-            uiManager.DisplayEvent(currentEventCard);
-        }
-        else if (currentEventCard == null)
-        {
-            Debug.LogError("API'den geçerli bir JSON alınamadı ve dönüştürülemedi. currentEventCard null geldi!");
+            Debug.LogError("API'den geçerli bir JSON alınamadı ve dönüştürülemedi. root null geldi!");
             
             // Acil durum Fallback EventCard üret
             EventCardSO fallbackCard = ScriptableObject.CreateInstance<EventCardSO>();
@@ -89,10 +98,9 @@ public class DecisionTreeController : MonoBehaviour
                     next_event = null 
                 }
             };
-            
-            currentEventCard = fallbackCard;
-            if (uiManager != null) uiManager.DisplayEvent(currentEventCard);
+            return fallbackCard;
         }
+        return root;
     }
 
     private void SelectBranch(int choiceIndex)
@@ -123,6 +131,20 @@ public class DecisionTreeController : MonoBehaviour
                 DestroyTree(currentEventCard.choices[i].next_event);
             }
         }
+        
+        // 1.5. Eğer prefetch edilmiş görevler varsa, SEÇİLMEYENLERİ İPTAL ET
+        if (prefetchCts != null)
+        {
+            for (int i = 0; i < prefetchCts.Length; i++)
+            {
+                if (i != choiceIndex && prefetchCts[i] != null)
+                {
+                    prefetchCts[i].Cancel();
+                    prefetchCts[i].Dispose();
+                    prefetchCts[i] = null;
+                }
+            }
+        }
 
         EventCardSO nextCard = selectedChoice.next_event;
 
@@ -134,21 +156,102 @@ public class DecisionTreeController : MonoBehaviour
 
         if (currentEventCard != null)
         {
-            // Ağaçta hala dal var, doğrudan göster
+            // Eğer yaprak düğüme (Depth 3) ulaştıysak (next_event'ler null ise), prefetch başlat.
+            bool isLeaf = true;
+            foreach (var c in currentEventCard.choices)
+            {
+                if (c.next_event != null) isLeaf = false;
+            }
+
+            if (isLeaf)
+            {
+                Debug.Log("Depth 2'ye ulaşıldı. Gelecek nesil için Prefetch görevleri başlatılıyor...");
+                prefetchTasks = new Task<EventCardSO>[currentEventCard.choices.Count];
+                prefetchCts = new System.Threading.CancellationTokenSource[currentEventCard.choices.Count];
+                
+                int currentEco = factionManager != null ? factionManager.CurrentEconomy : 50;
+                int currentEnv = factionManager != null ? factionManager.CurrentEnvironment : 50;
+                int currentSoc = factionManager != null ? factionManager.CurrentSociety : 50;
+
+                for (int i = 0; i < currentEventCard.choices.Count; i++)
+                {
+                    Choice c = currentEventCard.choices[i];
+                    // Seçimin etkilerini şimdiki duruma ekleyip tahmin yapalım
+                    int predictedEco = Mathf.Clamp(currentEco + c.economy_impact, 0, 100);
+                    int predictedEnv = Mathf.Clamp(currentEnv + c.environment_impact, 0, 100);
+                    int predictedSoc = Mathf.Clamp(currentSoc + c.society_impact, 0, 100);
+                    
+                    prefetchCts[i] = new System.Threading.CancellationTokenSource();
+                    prefetchTasks[i] = FetchNewTreeAsync(c.next_prompt_clue, predictedEco, predictedEnv, predictedSoc, prefetchCts[i].Token);
+                }
+            }
+
             uiManager.DisplayEvent(currentEventCard);
         }
         else
         {
-            // Ağacın sonuna geldik (3. seçimin ardından)
+            // Ağacın sonuna geldik (Son Karar Tıklandı)
             if (factionManager != null && factionManager.IsTwoFactionsZero())
             {
                 TriggerEndGameSequence(selectedChoice.next_prompt_clue);
             }
             else
             {
-                // Elimizdeki clue ile yeni bir ağaç (3 depth) daha oluştur
-                FetchNewTree(selectedChoice.next_prompt_clue);
+                HandlePrefetchedTreeTransition(choiceIndex, selectedChoice.next_prompt_clue);
             }
+        }
+    }
+
+    private async void HandlePrefetchedTreeTransition(int choiceIndex, string fallbackClue)
+    {
+        if (uiManager != null) uiManager.ShowLoadingScreen(fallbackClue);
+
+        Task delayTask = Task.Delay(minLoadingScreenMs); // Animasyon için en az belirtilen süre bekle
+        Task<EventCardSO> treeTask = null;
+
+        if (prefetchTasks != null && choiceIndex < prefetchTasks.Length && prefetchTasks[choiceIndex] != null)
+        {
+            Debug.Log($"Prefetch görevi bekleniyor... (İndeks: {choiceIndex})");
+            treeTask = prefetchTasks[choiceIndex];
+        }
+        else
+        {
+            Debug.LogWarning("Prefetch bulunamadı, normal API çağrısı yapılıyor.");
+            int eco = factionManager != null ? factionManager.CurrentEconomy : 50;
+            int env = factionManager != null ? factionManager.CurrentEnvironment : 50;
+            int soc = factionManager != null ? factionManager.CurrentSociety : 50;
+            treeTask = FetchNewTreeAsync(fallbackClue, eco, env, soc);
+        }
+
+        await Task.WhenAll(delayTask, treeTask);
+        
+        if (treeTask != null && treeTask.IsCompletedSuccessfully)
+        {
+            currentEventCard = treeTask.Result;
+        }
+        else
+        {
+            Debug.LogWarning("TreeTask failed or cancelled. Trying to fetch normally.");
+            int eco = factionManager != null ? factionManager.CurrentEconomy : 50;
+            int env = factionManager != null ? factionManager.CurrentEnvironment : 50;
+            int soc = factionManager != null ? factionManager.CurrentSociety : 50;
+            currentEventCard = await FetchNewTreeAsync(fallbackClue, eco, env, soc);
+        }
+        
+        prefetchTasks = null; // Eski prefetch görevlerini temizle
+        if (prefetchCts != null)
+        {
+            for (int i = 0; i < prefetchCts.Length; i++)
+            {
+                if (prefetchCts[i] != null) prefetchCts[i].Dispose();
+            }
+            prefetchCts = null;
+        }
+
+        if (uiManager != null)
+        {
+            uiManager.HideLoadingScreen();
+            if (currentEventCard != null) uiManager.DisplayEvent(currentEventCard);
         }
     }
 

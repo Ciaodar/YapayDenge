@@ -9,9 +9,16 @@ using System.Text.RegularExpressions;
 
 public class GenAIService
 {
-    // Gemini API bilgileri
-    private const string API_URL =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent";
+    private readonly string[] FALLBACK_MODELS = new string[]
+    {
+        "gemini-3.5-flash",
+        "gemini-3-flash-preview",
+        "gemini-3.1-flash-lite",
+        "gemini-2.5-flash",
+        "gemini-2.5-flash-lite",
+        "gemini-2.0-flash",
+        "gemini-2.0-flash-lite"
+    };
 
     private readonly string API_KEY;
     private const int MAX_RETRIES = 3;
@@ -60,27 +67,41 @@ public class GenAIService
         }
     }
 
-    private string GetRandomGroundTruthRules()
+    private string GetRelevantGroundTruthRules(string context)
     {
         if (allGroundTruths == null || allGroundTruths.Length == 0) return "";
 
-        System.Random rnd = new System.Random();
+        // Context metnini kelimelere ayır (Tokenize)
+        string[] contextTokens = context.ToLower().Split(new char[] { ' ', '.', ',', '!', '?', ';', ':', '\n', '\r', '\"', '\'' }, StringSplitOptions.RemoveEmptyEntries);
+        HashSet<string> contextWords = new HashSet<string>(contextTokens);
 
-        List<GroundTruthScenario> selectedScenarios = new List<GroundTruthScenario>(allGroundTruths);
-
-        // Tüm 100 kuralı kendi içinde karıştır (sıralama ön yargısını kırmak için)
-        int sn = selectedScenarios.Count;
-        while (sn > 1)
+        // Her bir senaryoyu skorla (Basit TF-IDF / Anahtar Kelime Eşleşmesi)
+        var scoredScenarios = new List<KeyValuePair<GroundTruthScenario, int>>();
+        foreach (var scenario in allGroundTruths)
         {
-            sn--;
-            int k = rnd.Next(sn + 1);
-            var value = selectedScenarios[sn];
-            selectedScenarios[sn] = selectedScenarios[k];
-            selectedScenarios[k] = value;
+            int score = 0;
+            string textToMatch = (scenario.action_name + " " + scenario.scientific_basis).ToLower();
+            string[] scenarioTokens = textToMatch.Split(new char[] { ' ', '.', ',', '!', '?', ';', ':', '\n', '\r', '\"', '\'' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var token in scenarioTokens)
+            {
+                // Bağlaçlar ve kısa kelimeleri (ve, bir, vb.) elemek için 3 harften büyük olanları baz alıyoruz
+                if (token.Length > 3 && contextWords.Contains(token))
+                {
+                    score++;
+                }
+            }
+            // Biraz da rastgelelik ekleyelim ki her zaman birebir aynı kelime eşleşmesi aynı kartı getirmesin
+            score += UnityEngine.Random.Range(0, 2);
+            
+            scoredScenarios.Add(new KeyValuePair<GroundTruthScenario, int>(scenario, score));
         }
 
-        // SADECE İLK 5 TANESİNİ AL (Token tasarrufu için)
-        int takeCount = Mathf.Min(5, selectedScenarios.Count);
+        // Skorlara göre büyükten küçüğe sırala
+        scoredScenarios.Sort((x, y) => y.Value.CompareTo(x.Value));
+
+        // En alakalı SADECE İLK 5 TANESİNİ AL (Token tasarrufu için)
+        int takeCount = Mathf.Min(5, scoredScenarios.Count);
 
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("\nÖNEMLİ BİLİMSEL REFERANSLAR (GROUND TRUTH):");
@@ -88,7 +109,7 @@ public class GenAIService
             $"Aşağıdaki {takeCount} olay ve etkilerini bilimsel 'Ground Truth' olarak kabul etmelisin. Seçenekleri üretirken veya puanlarken bilimsel verilere dayanmalısın:");
         for (int i = 0; i < takeCount; i++)
         {
-            var s = selectedScenarios[i];
+            var s = scoredScenarios[i].Key;
             sb.AppendLine(
                 $"- Senaryo: {s.action_name} | Ekonomi: {s.economy_impact}, Çevre: {s.environment_impact}, Halk: {s.society_impact}. Neden: {s.scientific_basis}");
         }
@@ -144,18 +165,20 @@ public class GenAIService
         public GroundTruthScenario[] scenarios;
     }
 
-    public async Task<string> GenerateEventAsync(string context, int eco, int env, int soc)
+    public async Task<string> GenerateEventAsync(string context, int eco, int env, int soc, System.Threading.CancellationToken cancellationToken = default)
     {
-        string groundTruthRules = GetRandomGroundTruthRules();
+        string groundTruthRules = GetRelevantGroundTruthRules(context);
         string dynamicPromptRules = "";
         string choiceCountRule =
-            "HER BİR OLAY (event) İÇİN KESİNLİKLE 4 FARKLI SEÇENEK ('choices') ÜRETMELİSİN!";
+            "Ağaç KESİNLİKLE 2 seviye (Depth 2) derinliğinde olmalıdır:\n" +
+            "- Derinlik 1 (Root): 4 seçim.\n" +
+            "- Derinlik 2: KESİNLİKLE SADECE 2 seçim.";
 
         if (eco <= 0 || env <= 0 || soc <= 0)
         {
             dynamicPromptRules =
                 "KRİTİK DURUM: Factionlardan biri SIFIRLANDI! Ülke çöküşte. Diğer tüm değerleri de hızla sıfıra çekecek felaket senaryoları ve seçenekler üret.\n" +
-                "ÇÖKÜŞ DURUMU: Oyuncuya çaresizliği hissettirmek için olayları SADECE 1 TEK SEÇENEK (çaresiz bir kabul) bırakarak kurgulamalısın. Çöküş anında normaldeki '4 seçenek' kuralı iptaldir.";
+                "ÇÖKÜŞ DURUMU: Oyuncuya çaresizliği hissettirmek için olayları SADECE 1 TEK SEÇENEK (çaresiz bir kabul) bırakarak kurgulamalısın. Çöküş anında normaldeki '4-2 seçenek' kuralı iptaldir.";
         }
         else
         {
@@ -203,15 +226,15 @@ Description kısmında maksimum 30 kelime, choices kısmında ise her birinin te
 
 Yanıtın SADECE aşağıdaki yapıda geçerli bir JSON olmalıdır. Başında veya sonunda (```json vb.) markdown etiketleri KULLANMA. Sadece JSON verisini döndür.
 Bunu bir KARAR AĞACI olarak düşün. Ağaç KESİNLİKLE 2 seviye (Depth 2) derinliğinde olmalıdır:
-- Derinlik 1: İlk olay (Root)
-- Derinlik 2: İlk olayın seçimlerindeki (choices) 'next_event' olayları.
+- Derinlik 1: İlk olay (Root). 4 seçenek.
+- Derinlik 2: İkinci olaylar. (Leaf). 2 seçenek.
 SADECE Derinlik 2'deki 'next_event' değerleri null olmalıdır!
 TÜM 'choice' objelerinde (next_event null olsa bile) 'next_prompt_clue' alanı KESİNLİKLE bulunmalıdır. 'next_prompt_clue' alanı, API yüklenirken oyuncunun siyah bir ekranda okuyacağı ara sahne hikayesidir (Flavor Text). Bu nedenle en az 20, en fazla 35 kelime uzunluğunda, alınan o kararın şehre yansıyan uzun vadeli, atmosferik ve dramatik sonucunu betimleyen edebi bir paragraf olmalıdır.
 {choiceCountRule}
 
 {dynamicPromptRules}
 
-JSON Yapısı Örneği (TAM 2 Seviye Derinlik ve 4 Seçenek):
+JSON Yapısı Örneği (TAM 2 Seviye Derinlik: Root 4 Seçenek, Her Leaf 2 Seçenek):
 {{
   ""event_id"": ""ROOT_01"",
   ""title"": ""Derinlik 1 Olayı (Başlangıç)"",
@@ -219,185 +242,57 @@ JSON Yapısı Örneği (TAM 2 Seviye Derinlik ve 4 Seçenek):
   ""choices"": [
     {{
       ""text"": ""Derinlik 1 - Seçim 1"",
-      ""economy_impact"": 5,
-      ""environment_impact"": -5,
-      ""society_impact"": 0,
+      ""economy_impact"": 5, ""environment_impact"": -5, ""society_impact"": 0,
       ""next_prompt_clue"": ""İkinci aşamaya geçiş ipucu."",
       ""next_event"": {{
          ""event_id"": ""D2_A"",
          ""title"": ""Derinlik 2 - A Olayı (SON)"",
          ""description"": ""Birinci seçimin sonucu."",
          ""choices"": [
-             {{
-                ""text"": ""Son Karar 1"",
-                ""economy_impact"": -5,
-                ""environment_impact"": 10,
-                ""society_impact"": 5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 2"",
-                ""economy_impact"": 10,
-                ""environment_impact"": -5,
-                ""society_impact"": 0,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 3"",
-                ""economy_impact"": 0,
-                ""environment_impact"": 0,
-                ""society_impact"": 0,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 4"",
-                ""economy_impact"": 5,
-                ""environment_impact"": 5,
-                ""society_impact"": -10,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }}
+             {{ ""text"": ""Son Karar 1"", ""economy_impact"": -5, ""environment_impact"": 10, ""society_impact"": 5, ""next_prompt_clue"": ""Yeni ağaç bağlamı."", ""next_event"": null }},
+             {{ ""text"": ""Son Karar 2"", ""economy_impact"": 10, ""environment_impact"": -5, ""society_impact"": 0, ""next_prompt_clue"": ""Yeni ağaç bağlamı."", ""next_event"": null }}
          ]
       }}
     }},
     {{
       ""text"": ""Derinlik 1 - Seçim 2"",
-      ""economy_impact"": -10,
-      ""environment_impact"": 10,
-      ""society_impact"": 5,
+      ""economy_impact"": -10, ""environment_impact"": 10, ""society_impact"": 5,
       ""next_prompt_clue"": ""İkinci aşamaya geçiş ipucu."",
       ""next_event"": {{
          ""event_id"": ""D2_B"",
          ""title"": ""Derinlik 2 - B Olayı (SON)"",
          ""description"": ""İkinci seçimin sonucu."",
          ""choices"": [
-             {{
-                ""text"": ""Son Karar 1"",
-                ""economy_impact"": 5,
-                ""environment_impact"": -5,
-                ""society_impact"": 5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 2"",
-                ""economy_impact"": 0,
-                ""environment_impact"": 5,
-                ""society_impact"": -5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 3"",
-                ""economy_impact"": 0,
-                ""environment_impact"": 0,
-                ""society_impact"": 0,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 4"",
-                ""economy_impact"": -5,
-                ""environment_impact"": -5,
-                ""society_impact"": 10,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }}
+             {{ ""text"": ""Son Karar 1"", ""economy_impact"": 5, ""environment_impact"": -5, ""society_impact"": 5, ""next_prompt_clue"": ""Yeni ağaç bağlamı."", ""next_event"": null }},
+             {{ ""text"": ""Son Karar 2"", ""economy_impact"": 0, ""environment_impact"": 5, ""society_impact"": -5, ""next_prompt_clue"": ""Yeni ağaç bağlamı."", ""next_event"": null }}
          ]
       }}
     }},
     {{
       ""text"": ""Derinlik 1 - Seçim 3"",
-      ""economy_impact"": 0,
-      ""environment_impact"": 0,
-      ""society_impact"": 0,
+      ""economy_impact"": 0, ""environment_impact"": 0, ""society_impact"": 0,
       ""next_prompt_clue"": ""İkinci aşamaya geçiş ipucu."",
       ""next_event"": {{
          ""event_id"": ""D2_C"",
          ""title"": ""Derinlik 2 - C Olayı (SON)"",
          ""description"": ""Üçüncü seçimin sonucu."",
          ""choices"": [
-             {{
-                ""text"": ""Son Karar 1"",
-                ""economy_impact"": 5,
-                ""environment_impact"": -5,
-                ""society_impact"": 5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 2"",
-                ""economy_impact"": 0,
-                ""environment_impact"": 5,
-                ""society_impact"": -5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 3"",
-                ""economy_impact"": 0,
-                ""environment_impact"": 0,
-                ""society_impact"": 0,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 4"",
-                ""economy_impact"": -5,
-                ""environment_impact"": 0,
-                ""society_impact"": 5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }}
+             {{ ""text"": ""Son Karar 1"", ""economy_impact"": 5, ""environment_impact"": -5, ""society_impact"": 5, ""next_prompt_clue"": ""Yeni ağaç bağlamı."", ""next_event"": null }},
+             {{ ""text"": ""Son Karar 2"", ""economy_impact"": 0, ""environment_impact"": 5, ""society_impact"": -5, ""next_prompt_clue"": ""Yeni ağaç bağlamı."", ""next_event"": null }}
          ]
       }}
     }},
     {{
       ""text"": ""Derinlik 1 - Seçim 4"",
-      ""economy_impact"": 5,
-      ""environment_impact"": 5,
-      ""society_impact"": -10,
+      ""economy_impact"": 5, ""environment_impact"": 5, ""society_impact"": -10,
       ""next_prompt_clue"": ""İkinci aşamaya geçiş ipucu."",
       ""next_event"": {{
          ""event_id"": ""D2_D"",
          ""title"": ""Derinlik 2 - D Olayı (SON)"",
          ""description"": ""Dördüncü seçimin sonucu."",
          ""choices"": [
-             {{
-                ""text"": ""Son Karar 1"",
-                ""economy_impact"": 5,
-                ""environment_impact"": -5,
-                ""society_impact"": 5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 2"",
-                ""economy_impact"": 0,
-                ""environment_impact"": 5,
-                ""society_impact"": -5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 3"",
-                ""economy_impact"": 0,
-                ""environment_impact"": 0,
-                ""society_impact"": 0,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }},
-             {{
-                ""text"": ""Son Karar 4"",
-                ""economy_impact"": -5,
-                ""environment_impact"": 0,
-                ""society_impact"": 5,
-                ""next_prompt_clue"": ""Yeni ağaç bağlamı."",
-                ""next_event"": null
-             }}
+             {{ ""text"": ""Son Karar 1"", ""economy_impact"": 5, ""environment_impact"": -5, ""society_impact"": 5, ""next_prompt_clue"": ""Yeni ağaç bağlamı."", ""next_event"": null }},
+             {{ ""text"": ""Son Karar 2"", ""economy_impact"": 0, ""environment_impact"": 5, ""society_impact"": -5, ""next_prompt_clue"": ""Yeni ağaç bağlamı."", ""next_event"": null }}
          ]
       }}
     }}
@@ -420,32 +315,46 @@ JSON Yapısı Örneği (TAM 2 Seviye Derinlik ve 4 Seçenek):
 
         string jsonPayload = JsonUtility.ToJson(requestBody);
 
-        for (int i = 0; i < MAX_RETRIES; i++)
+        // Agresif Fallback Mekanizması: Modelleri sırayla dener. Max 2 tur atar (toplam 14 deneme).
+        int maxGlobalRetries = 2; 
+        for (int retryRound = 0; retryRound < maxGlobalRetries; retryRound++)
         {
-            try
+            foreach (string modelName in FALLBACK_MODELS)
             {
-                string responseString = await SendWebRequestAsync(API_URL, jsonPayload);
-
-                // Gemini response'unu parse et
-                GeminiResponse geminiResponse = JsonUtility.FromJson<GeminiResponse>(responseString);
-
-                if (geminiResponse != null && geminiResponse.candidates != null && geminiResponse.candidates.Length > 0)
+                cancellationToken.ThrowIfCancellationRequested();
+                string apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent";
+                try
                 {
-                    string aiText = geminiResponse.candidates[0].content.parts[0].text;
-                    Debug.Log($"[API RAW RESPONSE]: {aiText}");
+                    string responseString = await SendWebRequestAsync(apiUrl, jsonPayload, cancellationToken);
 
-                    // LLM bazen JSON'ı ```json ... ``` markdown blokları arasına alabilir. Bu kısımları temizle:
-                    aiText = CleanJsonString(aiText);
-                    Debug.Log($"[API CLEANED RESPONSE]: {aiText}");
+                    // Gemini response'unu parse et
+                    GeminiResponse geminiResponse = JsonUtility.FromJson<GeminiResponse>(responseString);
 
-                    return aiText;
+                    if (geminiResponse != null && geminiResponse.candidates != null && geminiResponse.candidates.Length > 0)
+                    {
+                        string aiText = geminiResponse.candidates[0].content.parts[0].text;
+                        Debug.Log($"[API RAW RESPONSE ({modelName})]: {aiText}");
+
+                        // LLM bazen JSON'ı ```json ... ``` markdown blokları arasına alabilir. Bu kısımları temizle:
+                        aiText = CleanJsonString(aiText);
+                        Debug.Log($"[API CLEANED RESPONSE]: {aiText}");
+
+                        return aiText;
+                    }
+                }
+                catch (System.OperationCanceledException)
+                {
+                    Debug.Log($"[GenAI] {modelName} isteği iptal edildi.");
+                    throw; // Döngüyü sonlandır
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"[GenAI] {modelName} modelinde hata: {ex.Message}. Sıradaki modele geçiliyor...");
+                    await Task.Delay(500, cancellationToken); // Flood'u önlemek için kısa bekleme
                 }
             }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"API Hatası (Deneme {i + 1}/{MAX_RETRIES}): {ex.Message}");
-                await Task.Delay(1000);
-            }
+            Debug.LogWarning($"Tüm modeller denendi. Biraz beklenip baştan başlanıyor... (Tur: {retryRound + 1}/{maxGlobalRetries})");
+            await Task.Delay(1500, cancellationToken);
         }
 
         Debug.LogError(
@@ -453,7 +362,7 @@ JSON Yapısı Örneği (TAM 2 Seviye Derinlik ve 4 Seçenek):
         return GetFallbackJson();
     }
 
-    public async Task<string> GenerateStorySummaryAsync(string context)
+    public async Task<string> GenerateStorySummaryAsync(string context, System.Threading.CancellationToken cancellationToken = default)
     {
         string prompt =
             $@"Oyun bitti. Oyuncunun yönettiği ülke, yaptığı yanlış seçimler sonucunda tamamen çöktü ve yönetilecek bir şey kalmadı.
@@ -481,31 +390,44 @@ Bu özet oyun sonu ekranında (End Game Screen) gösterilecek. Asla JSON vs form
 
         string jsonPayload = JsonUtility.ToJson(requestBody);
 
-        for (int i = 0; i < MAX_RETRIES; i++)
+        // End Game Summary için de Agresif Fallback Mekanizması
+        int maxGlobalRetries = 2;
+        for (int retryRound = 0; retryRound < maxGlobalRetries; retryRound++)
         {
-            try
+            foreach (string modelName in FALLBACK_MODELS)
             {
-                string responseString = await SendWebRequestAsync(API_URL, jsonPayload);
-                GeminiResponse geminiResponse = JsonUtility.FromJson<GeminiResponse>(responseString);
-
-                if (geminiResponse != null && geminiResponse.candidates != null && geminiResponse.candidates.Length > 0)
+                cancellationToken.ThrowIfCancellationRequested();
+                string apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent";
+                try
                 {
-                    string aiText = geminiResponse.candidates[0].content.parts[0].text;
-                    return aiText.Trim();
+                    string responseString = await SendWebRequestAsync(apiUrl, jsonPayload, cancellationToken);
+
+                    GeminiResponse geminiResponse = JsonUtility.FromJson<GeminiResponse>(responseString);
+
+                    if (geminiResponse != null && geminiResponse.candidates != null && geminiResponse.candidates.Length > 0)
+                    {
+                        return geminiResponse.candidates[0].content.parts[0].text;
+                    }
+                }
+                catch (System.OperationCanceledException)
+                {
+                    Debug.Log($"[GenAI - Summary] {modelName} isteği iptal edildi.");
+                    throw; // Döngüyü tamamen sonlandır
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"[GenAI - Summary] {modelName} modelinde hata: {ex.Message}. Sıradaki modele geçiliyor...");
+                    await Task.Delay(500, cancellationToken);
                 }
             }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"Özet API Hatası (Deneme {i + 1}/{MAX_RETRIES}): {ex.Message}");
-                await Task.Delay(1000);
-            }
+            await Task.Delay(1500, cancellationToken);
         }
 
         return
             "Yıllar süren mücadeleye rağmen ülke, alınan ağır kararların altında ezildi. Ekonomik çöküş, çevresel felaketler ve halkın bitmeyen isyanları sonucunda geriye yönetilecek hiçbir şey kalmadı. Tarih, bu dönemi bir felaketler silsilesi olarak hatırlayacak.";
     }
 
-    private Task<string> SendWebRequestAsync(string url, string jsonBody)
+    private Task<string> SendWebRequestAsync(string url, string jsonBody, System.Threading.CancellationToken cancellationToken)
     {
         var tcs = new TaskCompletionSource<string>();
 
@@ -515,20 +437,44 @@ Bu özet oyun sonu ekranında (End Game Screen) gösterilecek. Asla JSON vs form
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
         request.SetRequestHeader("X-goog-api-key", API_KEY);
-        request.timeout = 15; // 15 saniye zaman aşımı
+        request.timeout = 60; // 3 Derinlikli ağaç üretimi uzun süreceği için zaman aşımını 60 saniyeye çıkardık
 
         var operation = request.SendWebRequest();
+        
+        System.Threading.CancellationTokenRegistration registration = default;
+        if (cancellationToken != default)
+        {
+            registration = cancellationToken.Register(() =>
+            {
+                if (!tcs.Task.IsCompleted)
+                {
+                    request.Abort();
+                    tcs.TrySetCanceled();
+                }
+            });
+        }
 
         operation.completed += (AsyncOperation op) =>
         {
+            if (cancellationToken != default)
+            {
+                registration.Dispose();
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                tcs.TrySetCanceled();
+                return;
+            }
+
             if (request.result == UnityWebRequest.Result.ConnectionError ||
                 request.result == UnityWebRequest.Result.ProtocolError)
             {
-                tcs.SetException(new Exception(request.error + "\n" + request.downloadHandler.text));
+                tcs.TrySetException(new Exception(request.error + "\n" + request.downloadHandler.text));
             }
             else
             {
-                tcs.SetResult(request.downloadHandler.text);
+                tcs.TrySetResult(request.downloadHandler.text);
             }
 
             request.Dispose();
